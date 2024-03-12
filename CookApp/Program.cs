@@ -1,5 +1,5 @@
-using CookApp.Context;
-using CookApp.Extension;
+using CookApp.API.Extension;
+using CookApp.DAL;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);

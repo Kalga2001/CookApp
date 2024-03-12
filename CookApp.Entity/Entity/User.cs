@@ -1,7 +1,7 @@
 ﻿using CookApp.Entity;
-using CookApp.Enums;
+using CookApp.Entity.Entity;
 
-namespace CookApp.Models
+namespace CookApp.Entity.Entity
 {
     public class User : BaseEntity
     {

@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CookApp.DAL.IGenericRepository
+namespace CookApp.DAL.IRepository
 {
     public interface IGenericRepository<TEntity> : IDisposable where TEntity : BaseEntity
     {

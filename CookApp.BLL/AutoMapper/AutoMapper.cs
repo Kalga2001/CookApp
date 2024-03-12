@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using CookApp.Dtos.AccountDtos;
-using CookApp.Models;
+using CookApp.BLL.Dtos.AccountDtos;
+using CookApp.Entity.Entity;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;

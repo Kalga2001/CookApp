@@ -1,4 +1,4 @@
-﻿namespace CookApp.Enums
+﻿namespace CookApp.Entity.Enums
 {
     public enum OrderStatus
     {

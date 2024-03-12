@@ -1,4 +1,4 @@
-﻿namespace CookApp.Dtos.AccountDtos
+﻿namespace CookApp.BLL.Dtos.AccountDtos
 {
     public class RegistrationDto
     {

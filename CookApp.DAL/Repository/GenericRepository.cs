@@ -6,8 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using CookApp.Context;
-using CookApp.DAL.IGenericRepository;
+using CookApp.DAL.IRepository;
 
 namespace CookApp.DAL.Repository
 {

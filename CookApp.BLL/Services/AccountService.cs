@@ -1,8 +1,9 @@
-﻿using CookApp.BLL.IServices;
-using CookApp.DAL.IGenericRepository;
-using CookApp.Dtos.AccountDtos;
-using CookApp.Enums;
-using CookApp.Models;
+﻿using AutoMapper;
+using CookApp.BLL.Dtos.AccountDtos;
+using CookApp.BLL.IServices;
+using CookApp.DAL.IRepository;
+using CookApp.Entity.Entity;
+using CookApp.Entity.Enums;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -16,28 +17,25 @@ namespace CookApp.BLL.Services
     {
         private readonly IGenericRepository<User> _userRepository;
         private readonly IGenericRepository<Role> _roleRepository;
-        public AccountService(IGenericRepository<User> userRepository, IGenericRepository<Role> roleRepository)
+        private readonly IMapper _mapper;
+
+        public AccountService(IGenericRepository<User> userRepository, IGenericRepository<Role> roleRepository, IMapper mapper)
         {
             _userRepository = userRepository;
             _roleRepository = roleRepository;
+            _mapper = mapper;
         }
+
         public async Task<User> Login(LoginDto login)
         {
             return await _userRepository.GetAllAsyncQuery().FirstOrDefaultAsync(x => x.Email == login.Email);
         }
 
-
         public async Task Registration(RegistrationDto registration)
         {
-            var user = new User
-            {
-                Name = registration.Name,
-                Email = registration.Email,
-                Password = registration.Password
-            };
+            var user = _mapper.Map<User>(registration);
 
-            var defaultRole = await _roleRepository.GetAllAsyncQuery()
-                                                   .FirstOrDefaultAsync(x => x.RoleName == RoleName.Client);
+            var defaultRole = await _roleRepository.GetAllAsyncQuery().FirstOrDefaultAsync(x => x.RoleName == RoleName.Client);
 
             if (defaultRole == null)
             {
@@ -51,7 +49,10 @@ namespace CookApp.BLL.Services
             };
 
             user.UserRoles = new List<UserRole> { userRole };
+
             await _userRepository.AddAsync(user);
         }
     }
+
+
 }

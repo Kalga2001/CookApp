@@ -1,5 +1,5 @@
-﻿using CookApp.Dtos.AccountDtos;
-using CookApp.Models;
+﻿using CookApp.BLL.Dtos.AccountDtos;
+using CookApp.Entity.Entity;
 using System;
 using System.Collections.Generic;
 using System.Linq;

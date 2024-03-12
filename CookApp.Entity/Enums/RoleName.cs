@@ -1,4 +1,4 @@
-﻿namespace CookApp.Enums
+﻿namespace CookApp.Entity.Enums
 {
     [Flags]
     public enum RoleName

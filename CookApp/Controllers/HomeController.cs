@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
-namespace CookApp.Controllers
+namespace CookApp.API.Controllers
 {
     public class HomeController : Controller
     {
@@ -22,6 +22,6 @@ namespace CookApp.Controllers
             return View();
         }
 
-        
+
     }
 }

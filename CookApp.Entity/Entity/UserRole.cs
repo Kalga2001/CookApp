@@ -1,8 +1,8 @@
 ﻿using CookApp.Entity;
 
-namespace CookApp.Models
+namespace CookApp.Entity.Entity
 {
-    public class UserRole:BaseEntity
+    public class UserRole : BaseEntity
     {
         public int RoleId { get; set; }
         public Role Role { get; set; }

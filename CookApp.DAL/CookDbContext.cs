@@ -1,9 +1,9 @@
-﻿using CookApp.DAL.EntityConfiguration;
-using CookApp.Models;
+﻿using CookApp.DAL.SeedData;
+using CookApp.Entity.Entity;
 using Microsoft.EntityFrameworkCore;
 using System.Numerics;
 
-namespace CookApp.Context
+namespace CookApp.DAL
 {
     public class CookDbContext : DbContext
     {
