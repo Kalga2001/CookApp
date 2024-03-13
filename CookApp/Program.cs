@@ -1,14 +1,17 @@
 using CookApp.API.Extension;
+using CookApp.BLL.AutoMapper;
 using CookApp.DAL;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
- 
+
 // Add services to the container.
+ 
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<CookDbContext>(options => options.UseSqlServer(builder.Configuration["ConnectionStrings:DefaultConnection"]));
 builder.Services.AddServices();
-
+builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

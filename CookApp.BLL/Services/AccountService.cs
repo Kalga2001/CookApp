@@ -8,7 +8,10 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using AutoMapper;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace CookApp.BLL.Services
@@ -53,6 +56,4 @@ namespace CookApp.BLL.Services
             await _userRepository.AddAsync(user);
         }
     }
-
-
 }

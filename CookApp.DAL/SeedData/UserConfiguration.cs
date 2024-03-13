@@ -14,9 +14,9 @@ namespace CookApp.DAL.SeedData
         public void Configure(EntityTypeBuilder<User> builder)
         {
             builder.HasData(
-                new User { ID = 1, Name = "John Doe", Email = "john@example.com", Password = "password" },
-                new User { ID = 2, Name = "Jane Smith", Email = "jane@example.com", Password = "password" },
-                new User { ID = 3, Name = "Alice Johnson", Email = "alice@example.com", Password = "password" }
+                new User { Id = 1, Name = "John Doe", Email = "john@example.com", Password = "password" },
+                new User { Id = 2, Name = "Jane Smith", Email = "jane@example.com", Password = "password" },
+                new User { Id = 3, Name = "Alice Johnson", Email = "alice@example.com", Password = "password" }
             );
         }
     }

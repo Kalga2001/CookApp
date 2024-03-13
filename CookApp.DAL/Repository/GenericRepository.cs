@@ -53,7 +53,7 @@ namespace CookApp.DAL.Repository
                 query = include(query);
             }
 
-            return await query.FirstOrDefaultAsync(t => t.ID == id);
+            return await query.FirstOrDefaultAsync(t => t.Id == id);
         }
 
         public async Task<TEntity> SetValues(TEntity existingEntity, TEntity editedEntity)

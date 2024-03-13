@@ -10,11 +10,11 @@ using System.Threading.Tasks;
 
 namespace CookApp.BLL.AutoMapper
 {
-    public class AutoMapper : Profile
+    public class AutoMapperProfile : Profile
     {
-        public AutoMapper()
+        public AutoMapperProfile()
         {
-            CreateMap<User, RegistrationDto>();
+            CreateMap<RegistrationDto, User>().ReverseMap();             
         }
     }
 }
