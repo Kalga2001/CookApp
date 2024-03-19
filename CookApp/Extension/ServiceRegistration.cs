@@ -10,7 +10,7 @@ namespace CookApp.API.Extension
     {
         public static void AddServices(this IServiceCollection services)
         {
-
+            services.AddHttpContextAccessor();
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
              

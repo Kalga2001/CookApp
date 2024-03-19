@@ -13,6 +13,8 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Http;
 
 namespace CookApp.BLL.Services
 {
@@ -21,17 +23,28 @@ namespace CookApp.BLL.Services
         private readonly IGenericRepository<User> _userRepository;
         private readonly IGenericRepository<Role> _roleRepository;
         private readonly IMapper _mapper;
-
-        public AccountService(IGenericRepository<User> userRepository, IGenericRepository<Role> roleRepository, IMapper mapper)
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        public AccountService(IGenericRepository<User> userRepository, IGenericRepository<Role> roleRepository, IMapper mapper, IHttpContextAccessor httpContextAccessor)
         {
             _userRepository = userRepository;
             _roleRepository = roleRepository;
             _mapper = mapper;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<User> Login(LoginDto login)
         {
-            return await _userRepository.GetAllAsyncQuery().FirstOrDefaultAsync(x => x.Email == login.Email);
+            var user = await _userRepository.GetAllAsyncQuery().FirstOrDefaultAsync(x => x.Email == login.Email);
+
+            if (user != null)
+            {
+                user.LoginDate = DateTime.Now;
+                user.IsAuthenticated = true;
+            }
+
+            await _userRepository.Update(user);
+
+            return user;
         }
 
         public async Task Registration(RegistrationDto registration)
@@ -54,6 +67,29 @@ namespace CookApp.BLL.Services
             user.UserRoles = new List<UserRole> { userRole };
 
             await _userRepository.AddAsync(user);
+        }
+
+        public string GetCurrentUserEmail()
+        {
+            var lastLoggedInUser = _userRepository
+              .GetAllAsyncQuery()
+              .OrderByDescending(x => x.LoginDate)
+              .FirstOrDefault();
+
+            if (lastLoggedInUser != null)
+            {
+                return lastLoggedInUser.Email;
+            }
+
+            return null;
+        }
+
+        public bool IsAuthentificated()
+        {
+            string email = GetCurrentUserEmail();
+
+            return _userRepository.GetAllAsyncQuery().FirstOrDefault(x => x.Email == email).IsAuthenticated;
+
         }
     }
 }
