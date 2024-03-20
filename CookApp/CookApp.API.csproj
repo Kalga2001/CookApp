@@ -8,6 +8,8 @@
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="13.0.1" />
+    <PackageReference Include="BuildBundlerMinifier" Version="3.2.449" />
+    <PackageReference Include="BundlerMinifier.Core" Version="3.2.449" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.3">
@@ -21,4 +23,7 @@
     <ProjectReference Include="..\CookApp.DAL\CookApp.DAL.csproj" />
   </ItemGroup>
 
+	<Target Name="BundlerMinify" AfterTargets="Compile" Condition="'$(Configuration)' == 'Release'">
+		<Exec Command="&quot;$(BundlerMinifierPath)&quot; &quot;$(ProjectDir)bundleconfig.json&quot;" />
+	</Target>
 </Project>
