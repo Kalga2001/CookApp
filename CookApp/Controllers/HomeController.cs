@@ -18,8 +18,7 @@ namespace CookApp.API.Controllers
 
         public IActionResult Index()
         {
-            string loggedInUserEmail = _userService.GetCurrentUserEmail(); // Получаем адрес электронной почты текущего пользователя
-            ViewData["LoggedInUserEmail"] = loggedInUserEmail; // Передаем адрес электронной почты в представление через ViewData
+             
             return View();
         }
 

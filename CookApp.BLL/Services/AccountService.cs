@@ -15,6 +15,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
+using CookApp.DAL.Helpers;
 
 namespace CookApp.BLL.Services
 {
@@ -49,9 +50,10 @@ namespace CookApp.BLL.Services
 
         public async Task Registration(RegistrationDto registration)
         {
+
             var user = _mapper.Map<User>(registration);
 
-            var defaultRole = await _roleRepository.GetAllAsyncQuery().FirstOrDefaultAsync(x => x.RoleName == RoleName.Client);
+            var defaultRole = await _roleRepository.GetAllAsyncQuery().FirstOrDefaultAsync(x => x.RoleName.Contains(nameof(RoleName.Client)));
 
             if (defaultRole == null)
             {
@@ -65,31 +67,10 @@ namespace CookApp.BLL.Services
             };
 
             user.UserRoles = new List<UserRole> { userRole };
+            user.Password = Helper.HashPassword(user.Password);
 
             await _userRepository.AddAsync(user);
         }
 
-        public string GetCurrentUserEmail()
-        {
-            var lastLoggedInUser = _userRepository
-              .GetAllAsyncQuery()
-              .OrderByDescending(x => x.LoginDate)
-              .FirstOrDefault();
-
-            if (lastLoggedInUser != null)
-            {
-                return lastLoggedInUser.Email;
-            }
-
-            return null;
-        }
-
-        public bool IsAuthentificated()
-        {
-            string email = GetCurrentUserEmail();
-
-            return _userRepository.GetAllAsyncQuery().FirstOrDefault(x => x.Email == email).IsAuthenticated;
-
-        }
     }
 }

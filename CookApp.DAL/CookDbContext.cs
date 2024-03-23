@@ -18,6 +18,8 @@ namespace CookApp.DAL
         public DbSet<User> User { get; set; }
         public DbSet<Role> Role { get; set; }
         public DbSet<UserRole> UserRole { get; set; }
+        public DbSet<Product> Product { get; set; }
+        public DbSet<Ingredient> Ingredient { get; set; }  
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

@@ -12,7 +12,6 @@ namespace CookApp.BLL.IServices
     {
         Task<User> Login(LoginDto loginDto);
         Task Registration(RegistrationDto registrationDto);
-        string GetCurrentUserEmail();
-        bool IsAuthentificated();
+       
     }
 }

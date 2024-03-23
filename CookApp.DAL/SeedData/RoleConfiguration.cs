@@ -15,9 +15,9 @@ namespace CookApp.DAL.SeedData
         public void Configure(EntityTypeBuilder<Role> builder)
         {
             builder.HasData(
-                new Role { Id = 1, RoleName = RoleName.Client },
-                new Role { Id = 2, RoleName = RoleName.Administrator },
-                new Role { Id = 3, RoleName = RoleName.Chef }
+                new Role { Id = 1, RoleName = nameof(RoleName.Client) },
+                new Role { Id = 2, RoleName = nameof(RoleName.Administrator) },
+                new Role { Id = 3, RoleName = nameof(RoleName.Chef) }
             );
         }
     }

@@ -65,10 +65,7 @@
     <div class="topbar">
         <div class="container">
             <div class="separator"></div>
-            @if (AccountService.IsAuthentificated())
-            {
-                <span class="span">@AccountService.GetCurrentUserEmail() </span>
-            }
+            
         </div>
     </div>
 
@@ -132,7 +129,7 @@
                     </li>
 
                     <li class="navbar-item">
-                        <a href="#" class="navbar-link hover-underline">
+                        <a href="#contact" class="navbar-link hover-underline">
                             <div class="separator"></div>
 
                             <span class="span">Contact</span>
