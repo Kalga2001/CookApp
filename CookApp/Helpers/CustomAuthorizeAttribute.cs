@@ -19,25 +19,22 @@ public class CustomAuthorizeAttribute : Attribute, IAuthorizationFilter
     public void OnAuthorization(AuthorizationFilterContext filterContext)
     {
         string refererHeader = filterContext.HttpContext.Request.Headers["Referer"];
+        string url = null;
 
-        // Проверяем наличие значения "Referer" и наличие в нем токена
-        if (string.IsNullOrEmpty(refererHeader) || !refererHeader.Contains("token="))
+        if (!refererHeader.Contains("token="))
         {
-            filterContext.Result = new UnauthorizedResult();
-            return;
+            url = refererHeader + "Account/Login";
         }
-
-        // Извлекаем часть строки, содержащую токен
-        int tokenIndex = refererHeader.IndexOf("token=");
-        string token = refererHeader.Substring(tokenIndex + 6);
-
         try
         {
-            // Расшифровываем токен
+            int tokenIndex = refererHeader.IndexOf("token=");
+            string token = refererHeader.Substring(tokenIndex + 6);
+
+
             var tokenHandler = new JwtSecurityTokenHandler();
             var jwtToken = tokenHandler.ReadJwtToken(token);
 
-            // Извлекаем роли из токена
+
             var rolesClaim = jwtToken.Claims.FirstOrDefault(c => c.Type == "http://schemas.microsoft.com/ws/2008/06/identity/claims/role");
             if (rolesClaim == null)
             {
@@ -45,7 +42,6 @@ public class CustomAuthorizeAttribute : Attribute, IAuthorizationFilter
             }
             string[] roles = rolesClaim.Value.Split(',');
 
-            // Проверяем, содержит ли токен разрешенные роли
             if (!roles.Intersect(allowedRoles).Any())
             {
                 filterContext.Result = new ForbidResult();
@@ -54,9 +50,10 @@ public class CustomAuthorizeAttribute : Attribute, IAuthorizationFilter
         }
         catch (Exception ex)
         {
-            filterContext.Result = new UnauthorizedResult();
+            filterContext.Result = new RedirectResult(url); 
             return;
         }
+
     }
 }
 
