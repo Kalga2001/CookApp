@@ -1,0 +1,48 @@
+﻿* {
+    padding: 0;
+    margin: 0
+}
+
+li {
+    list-style-type: none
+}
+
+.menu {
+    background: #333;
+    display: block
+}
+
+    .menu:after,
+    .menu:before {
+        content: '';
+        display: table;
+        clear: both
+    }
+
+    .menu > li {
+        display: inline-block;
+        float: left
+    }
+
+    .menu a {
+        display: block;
+        text-decoration: none;
+        color: #f9f9f9;
+        padding: 6px 10px;
+        background: #333
+    }
+
+        .menu a:hover {
+            background: #000;
+        }
+
+.dropdown-menu {
+    position: absolute;
+    display: none;
+    overflow: hidden;
+    transition: max-height 1s ease
+}
+
+.open {
+    display: block;
+}

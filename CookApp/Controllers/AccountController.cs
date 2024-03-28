@@ -1,6 +1,9 @@
 ﻿using CookApp.BLL.Dtos.AccountDtos;
 using CookApp.BLL.IServices;
+using CookApp.Entity.Entity;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Net.Http.Headers;
 
 
 
@@ -9,19 +12,22 @@ namespace CookApp.API.Controllers
     public class AccountController : Controller
     {
         private readonly IAccountService _accountService;
-
-        public AccountController(IAccountService accountService)
+        private readonly ITokenService _tokenService;
+        public AccountController(IAccountService accountService,ITokenService tokenService)
         {
             _accountService = accountService ?? throw new ArgumentNullException(nameof(accountService));
+            _tokenService = tokenService;
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public IActionResult Login()
         {
             return View();
         }
 
         [HttpPost]
+        [AllowAnonymous]
         public async Task<IActionResult> Login(LoginDto login)
         {
             if (!ModelState.IsValid)
@@ -29,23 +35,35 @@ namespace CookApp.API.Controllers
                 return View(login);
             }
 
-            var user = await _accountService.Login(login);
+            User user = await _accountService.Login(login);
             if (user == null)
             {
                 ModelState.AddModelError(string.Empty, "Invalid login attempt.");
                 return View(login);
             }
 
-            return RedirectToAction("Index", "Home");
+ 
+            var token = _tokenService.CreateToken(user);
+
+            using (var httpClient = new HttpClient())
+            {
+                httpClient.BaseAddress = new Uri("http://localhost:44365/");
+
+                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            }
+
+            return RedirectToAction("Index", "Home", new { token = token });
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public IActionResult Registration()
         {
             return View();
         }
 
         [HttpPost]
+        [AllowAnonymous]
         public async Task<IActionResult> Registration(RegistrationDto registration)
         {
             if (!ModelState.IsValid)

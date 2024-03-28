@@ -43,6 +43,15 @@ namespace CookApp.BLL.Services
                 user.IsAuthenticated = true;
             }
 
+            var users = await _userRepository.GetAllAsyncQuery().ToListAsync();
+            foreach(var u in users)
+            {
+                if(u!=user)
+                {
+                    u.IsAuthenticated = false;
+                }
+            }
+
             await _userRepository.Update(user);
 
             return user;
@@ -53,7 +62,7 @@ namespace CookApp.BLL.Services
 
             var user = _mapper.Map<User>(registration);
 
-            var defaultRole = await _roleRepository.GetAllAsyncQuery().FirstOrDefaultAsync(x => x.RoleName.Contains(nameof(RoleName.Client)));
+            var defaultRole = await _roleRepository.GetAllAsyncQuery().FirstOrDefaultAsync(x => x.RoleName.Contains("Client"));
 
             if (defaultRole == null)
             {
