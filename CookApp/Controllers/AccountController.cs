@@ -13,6 +13,7 @@ namespace CookApp.API.Controllers
     {
         private readonly IAccountService _accountService;
         private readonly ITokenService _tokenService;
+       
         public AccountController(IAccountService accountService,ITokenService tokenService)
         {
             _accountService = accountService ?? throw new ArgumentNullException(nameof(accountService));
@@ -42,18 +43,18 @@ namespace CookApp.API.Controllers
                 return View(login);
             }
 
- 
             var token = _tokenService.CreateToken(user);
 
-            using (var httpClient = new HttpClient())
+            var roles = _accountService.GetRolesByUserID(user.Id);
+
+            if (roles.Contains("Administrator"))
             {
-                httpClient.BaseAddress = new Uri("http://localhost:44365/");
-
-                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                return RedirectToAction("Index","Admin");
             }
-
+ 
             return RedirectToAction("Index", "Home", new { token = token });
         }
+
 
         [HttpGet]
         [AllowAnonymous]

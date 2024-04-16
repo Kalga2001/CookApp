@@ -9,8 +9,6 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
- 
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<CookDbContext>(options => options.UseSqlServer(builder.Configuration["ConnectionStrings:DefaultConnection"]));
 builder.Services.AddServices();
@@ -37,7 +35,6 @@ builder.Services.AddAuthentication(options =>
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
@@ -64,6 +61,7 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
 
 app.MapControllerRoute(
        name: "menu",
@@ -94,6 +92,5 @@ app.MapControllerRoute(
         name: "specialDish",
         pattern: "SpecialDish",
         defaults: new { controller = "Home", action = "SpecialDish" });
-
 
 app.Run();

@@ -23,14 +23,23 @@ namespace CookApp.BLL.Services
     {
         private readonly IGenericRepository<User> _userRepository;
         private readonly IGenericRepository<Role> _roleRepository;
+        private readonly IGenericRepository<UserRole> _userRoleRepository;
         private readonly IMapper _mapper;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        public AccountService(IGenericRepository<User> userRepository, IGenericRepository<Role> roleRepository, IMapper mapper, IHttpContextAccessor httpContextAccessor)
+        public AccountService(IGenericRepository<User> userRepository, IGenericRepository<Role> roleRepository, IMapper mapper, IHttpContextAccessor httpContextAccessor,IGenericRepository<UserRole> userRoleRepository)
         {
             _userRepository = userRepository;
             _roleRepository = roleRepository;
             _mapper = mapper;
             _httpContextAccessor = httpContextAccessor;
+            _userRoleRepository = userRoleRepository;
+        }
+
+        public IQueryable<string> GetRolesByUserID(int UserId)
+        {
+            var roles = _userRoleRepository.GetAllAsyncQuery().Where(x => x.UserId == UserId).Select(x=>x.RoleId);
+            var roleNames = _roleRepository.GetAllAsyncQuery().Where(x => roles.Contains(x.Id)).Select(x=>x.RoleName);
+            return roleNames;
         }
 
         public async Task<User> Login(LoginDto login)
@@ -80,6 +89,7 @@ namespace CookApp.BLL.Services
 
             await _userRepository.AddAsync(user);
         }
+
 
     }
 }

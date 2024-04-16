@@ -21,10 +21,17 @@ public class CustomAuthorizeAttribute : Attribute, IAuthorizationFilter
         string refererHeader = filterContext.HttpContext.Request.Headers["Referer"];
         string url = null;
 
+        if (refererHeader.Contains("Home"))
+        {
+            refererHeader = refererHeader.Replace("Home", "");
+        }
+
         if (!refererHeader.Contains("token="))
         {
             url = refererHeader + "Account/Login";
         }
+
+ 
         try
         {
             int tokenIndex = refererHeader.IndexOf("token=");
@@ -51,6 +58,7 @@ public class CustomAuthorizeAttribute : Attribute, IAuthorizationFilter
         catch (Exception ex)
         {
             filterContext.Result = new RedirectResult(url); 
+            
             return;
         }
 

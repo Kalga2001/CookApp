@@ -1,0 +1,54 @@
+﻿@{
+    ViewData["Title"] = "Admin Panel";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewData["Title"]</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+            a:hover {
+                text-decoration: underline;
+            }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to the Admin Panel</h1>
+        <ul>
+            <li><a href="#">Manage Users</a></li>
+            <li><a href="#">Manage Roles</a></li>
+            <li><a href="#">Manage Permissions</a></li>
+        </ul>
+    </div>
+</body>
+</html>
