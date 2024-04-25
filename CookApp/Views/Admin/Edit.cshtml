@@ -1,0 +1,21 @@
+﻿@using CookApp.BLL.Dtos.UserManagementDto
+@model UserDto
+
+@using (Html.BeginForm("Edit", "Admin", FormMethod.Post))
+{
+    @Html.HiddenFor(m => m.UserId) <!-- Remove the "new { Name = "userID" }" part -->
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Email)
+        @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Name)
+        @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
+    </div>
+
+    <button type="submit" class="btn btn-primary">Save</button>
+}
+
+@Html.ActionLink("Back to List", "Index")

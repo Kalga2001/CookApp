@@ -28,7 +28,14 @@ public class CustomAuthorizeAttribute : Attribute, IAuthorizationFilter
 
         if (!refererHeader.Contains("token="))
         {
-            url = refererHeader + "Account/Login";
+            if (!refererHeader.Contains("Account/Login"))
+            {
+                url = refererHeader + "Account/Login";
+            }
+            else
+            {
+                url = refererHeader;
+            }
         }
 
  
@@ -53,6 +60,11 @@ public class CustomAuthorizeAttribute : Attribute, IAuthorizationFilter
             {
                 filterContext.Result = new ForbidResult();
                 return;
+            }
+
+            if (roles.Contains("Administrator"))
+            {
+                url = refererHeader + "Admin/Index";
             }
         }
         catch (Exception ex)
