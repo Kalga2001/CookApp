@@ -1,4 +1,6 @@
-﻿using CookApp.Entity.Entity;
+﻿using CookApp.BLL.Dtos.ProductDto;
+using CookApp.Entity.Entity;
+using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,9 +11,10 @@ namespace CookApp.BLL.IServices
 {
     public interface IProductService
     {
-        Task<Product> GetProducts();
-        Task AddNewProduct();
-        Task UpdateProduct();
-        Task DeleteProduct();
+        Task<IQueryable<Product>> GetProducts();
+        Task<Product> GetProductById(int productId);
+        Task AddNewProduct(ProductDto productDto);
+        Task UpdateProduct(int productId, ProductDto productDto);
+        Task DeleteProduct(int productId);
     }
 }

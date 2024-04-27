@@ -22,23 +22,6 @@ namespace CookApp.DAL.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("CookApp.Entity.Entity.Ingredient", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Ingredient");
-                });
-
             modelBuilder.Entity("CookApp.Entity.Entity.Product", b =>
                 {
                     b.Property<int>("Id")
@@ -46,6 +29,12 @@ namespace CookApp.DAL.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ImageName")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -188,21 +177,6 @@ namespace CookApp.DAL.Migrations
                         });
                 });
 
-            modelBuilder.Entity("IngredientProduct", b =>
-                {
-                    b.Property<int>("IngredientsId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ProductsId")
-                        .HasColumnType("int");
-
-                    b.HasKey("IngredientsId", "ProductsId");
-
-                    b.HasIndex("ProductsId");
-
-                    b.ToTable("IngredientProduct");
-                });
-
             modelBuilder.Entity("CookApp.Entity.Entity.UserRole", b =>
                 {
                     b.HasOne("CookApp.Entity.Entity.Role", "Role")
@@ -220,21 +194,6 @@ namespace CookApp.DAL.Migrations
                     b.Navigation("Role");
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("IngredientProduct", b =>
-                {
-                    b.HasOne("CookApp.Entity.Entity.Ingredient", null)
-                        .WithMany()
-                        .HasForeignKey("IngredientsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("CookApp.Entity.Entity.Product", null)
-                        .WithMany()
-                        .HasForeignKey("ProductsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("CookApp.Entity.Entity.Role", b =>

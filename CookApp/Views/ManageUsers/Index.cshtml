@@ -258,7 +258,7 @@
             var formData = $('#editForm_' + userId).serialize();
 
             $.ajax({
-                url: '@Url.Action("Edit", "Admin")',
+                url: '@Url.Action("Edit", "ManageUsers")',
                 type: 'POST',
                 data: formData,
                 success: function (response) {
@@ -281,7 +281,7 @@
 
         function deleteUser(userId) {
             $.ajax({
-                url: '@Url.Action("Delete", "Admin")',
+                url: '@Url.Action("Delete", "ManageUsers")',
                 type: 'POST',
                 data: { userId: userId },
                 success: function (response) {
@@ -304,7 +304,6 @@
                 data: { userId: userId },
                 success: function (data) {
                     $.each(data, function (index, role) {
-                        debugger;
                         var checkbox = $('<input type="checkbox" class="form-check-input" name="role">').attr('value', role.id);
                         if (roleIds && roleIds.includes(role.id)) {
                             checkbox.prop('checked', true);
@@ -355,8 +354,32 @@
             $('#createUserModal').modal('hide');
         }
 
+        function createNewUser() {
+            var name = $('#name').val();
+            var email = $('#email').val();
+            var password = $('#password').val();
+            var userDto = {
+                Name: name,
+                Email: email,
+                Password: password
+            };
 
+            $.ajax({
+                url: '/ManageUsers/CreateNewUser',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(userDto),
+                success: function (response) {
+                    window.location.reload();
+                },
+                error: function (error) {
+                    console.error('Error:', error);
+                }
+            });
 
+            $('#createUserModal').modal('hide');
+        }
+ 
     </script>
 </body>
 </html>

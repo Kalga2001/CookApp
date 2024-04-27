@@ -16,7 +16,6 @@ namespace CookApp.API.Extension
 
             //Registration custom services
             services.AddScoped<IAccountService, AccountService>();
-            services.AddScoped<IIngredientService, IngredientService>();
             services.AddScoped<IProductService, ProductService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<ITokenService, TokenService>();

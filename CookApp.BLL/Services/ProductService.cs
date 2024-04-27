@@ -1,5 +1,8 @@
-﻿using CookApp.BLL.IServices;
+﻿using CookApp.BLL.Dtos.ProductDto;
+using CookApp.BLL.IServices;
+using CookApp.DAL.IRepository;
 using CookApp.Entity.Entity;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,24 +13,49 @@ namespace CookApp.BLL.Services
 {
     public class ProductService : IProductService
     {
-        public Task AddNewProduct()
+        private readonly IGenericRepository<Product> _productRepository;
+        public ProductService(IGenericRepository<Product> productRepository)
         {
-            throw new NotImplementedException();
+            _productRepository = productRepository;
+        }
+        public async Task AddNewProduct(ProductDto productDto)
+        {
+            Product newProduct = new Product
+            {
+                Description = productDto.Description,
+                Price = productDto.Price,
+                Name = productDto.Name,
+                ImageName = productDto.ImageName
+            };
+
+           await _productRepository.AddAsync(newProduct);
         }
 
-        public Task DeleteProduct()
+        public async Task DeleteProduct(int productId)
         {
-            throw new NotImplementedException();
+            await _productRepository.DeleteAsync(productId);
         }
 
-        public Task<Product> GetProducts()
+        public async Task<IQueryable<Product>> GetProducts()
         {
-            throw new NotImplementedException();
+            var products = _productRepository.GetAllAsyncQuery();
+            return products;
         }
 
-        public Task UpdateProduct()
+        public async Task<Product> GetProductById(int productId)
         {
-            throw new NotImplementedException();
+            var product = await _productRepository.GetByIdAsync(productId);
+            return product;
+        }
+        public async Task UpdateProduct(int productId, ProductDto productDto)
+        {
+            var product = await _productRepository.GetByIdAsync(productId);
+            product.Name = productDto.Name;
+            product.Description = productDto.Description;
+            product.Price = productDto.Price;
+            product.ImageName = productDto.ImageName;
+
+            await _productRepository.Update(product);
         }
     }
 }

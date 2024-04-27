@@ -7,16 +7,16 @@ namespace CookApp.API.Controllers
 {
     public class ManageRolesController : Controller
     {
-        private readonly IUserService _userService;
+        private readonly IRoleService _roleService;
 
-        public ManageRolesController(IUserService userService)
+        public ManageRolesController(IRoleService roleService)
         {
-            _userService = userService;
+            _roleService = roleService;
         }
 
         public async Task<IActionResult> Index()
         {
-            var roles = await _userService.GetRoles();
+            var roles = await _roleService.GetRoles();
 
             var roleDtos = roles.Select(role => new RoleDto
             {
@@ -28,26 +28,22 @@ namespace CookApp.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(RoleDto roleDto)
+        public async Task<IActionResult> CreateNewRole([FromBody]RoleDto roleDto)
         {
-            var role = await _userService.GetRoleById(roleDto.RoleID);
-            if (role == null)
-            {
-                return NotFound();
-            }
-
-            role.RoleName = roleDto.RoleName;
-            
-            await _userService.UpdateRoleInfo(role);
-
+            await _roleService.CreateNewRole(roleDto);
+            return Ok();
+        }
+        [HttpPost]
+        public async Task<IActionResult> Edit([FromBody] RoleDto roleDto)
+        {
+            await _roleService.UpdateRoleInfo(roleDto);
             return RedirectToAction("Index");
         }
  
         [HttpPost]
-        public async Task<IActionResult> Delete(int userId)
+        public async Task<IActionResult> Delete(int roleId)
         {
-            await _userService.DeleteUser(userId);
-
+            await _roleService.DeleteRole(roleId);
             return RedirectToAction("Index");
         }
     }

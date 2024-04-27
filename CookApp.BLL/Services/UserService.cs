@@ -45,29 +45,17 @@ namespace CookApp.BLL.Services
             return await _roleRepository.GetByIdAsync(roleId);
         }
 
-        public async Task UpdateUserInfo(User user)
+        public async Task UpdateUserInfo(UserDto userDto)
         {
-            var existingUser = await _userRepository.GetByIdAsync(user.Id);
+            var existingUser = await _userRepository.GetByIdAsync(userDto.UserId);
 
             if (existingUser == null)
                 throw new Exception("User not found");
 
-            existingUser.Name = user.Name;
-            existingUser.Email = user.Email;
+            existingUser.Name = userDto.Name;
+            existingUser.Email = userDto.Email;
             
             await _userRepository.Update(existingUser);
-        }
-
-        public async Task UpdateRoleInfo(Role role)
-        {
-            var existingRole = await _roleRepository.GetByIdAsync(role.Id);
-
-            if (existingRole == null)
-                throw new Exception("Role not found");
-
-            existingRole.RoleName = role.RoleName;
-
-            await _roleRepository.Update(existingRole);
         }
  
         public async Task DeleteUser(int userId)
@@ -75,12 +63,7 @@ namespace CookApp.BLL.Services
             await _userRepository.DeleteAsync(userId);
         }
 
-        public async Task<IQueryable<Role>> GetRoles()
-        {
-            var roles = _roleRepository.GetAllAsyncQuery();
-            return roles;
-        }
-
+ 
         public async Task<IQueryable<Role>> GetRolesByUserId(int userId)
         {
             var roles = _userRoleRepository.GetAllAsyncQuery()

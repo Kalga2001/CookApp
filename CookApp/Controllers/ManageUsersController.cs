@@ -31,7 +31,7 @@ namespace CookApp.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateNewUser([FromBody]UserDto userDto)
+        public async Task<IActionResult> CreateNewUser([FromBody] UserDto userDto)
         {
             await _userService.CreateNewUser(userDto);
             return Ok();
@@ -39,16 +39,7 @@ namespace CookApp.API.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(UserDto userDto)
         {
-            var user = await _userService.GetUserById(userDto.UserId);
-            if (user == null)
-            {
-                return NotFound();
-            }
-
-            user.Email = userDto.Email;
-            user.Name = userDto.Name;
-
-            await _userService.UpdateUserInfo(user);
+            await _userService.UpdateUserInfo(userDto);
 
             return RedirectToAction("Index");
         }
@@ -62,7 +53,7 @@ namespace CookApp.API.Controllers
                 return NotFound();
             }
 
-            var allRoles = await _userService.GetRoles();
+            var allRoles = await _roleService.GetRoles();
             var userRoles = await _userService.GetRolesByUserId(userId);
             var unassignedRoles = allRoles.Where(role => !userRoles.Any(userRole => userRole.RoleName == role.RoleName));
             var result = new
