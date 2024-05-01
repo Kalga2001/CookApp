@@ -12,6 +12,7 @@ namespace CookApp.BLL.IServices
     public interface IProductService
     {
         Task<IQueryable<Product>> GetProducts();
+        Task<IQueryable<Image>> GetAllImagesExceptCurrentProductImage(int productId);
         Task<Product> GetProductById(int productId);
         Task AddNewProduct(ProductDto productDto);
         Task UpdateProduct(int productId, ProductDto productDto);

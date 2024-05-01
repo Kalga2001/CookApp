@@ -1,0 +1,385 @@
+﻿@using CookApp.BLL.Dtos.ProductDto
+@model IEnumerable<ProductDto>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product List</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <style>
+        .navbar {
+            background-color: #333;
+            overflow: hidden;
+            width: 100%;
+        }
+
+            .navbar a {
+                float: left;
+                display: block;
+                color: white;
+                text-align: center;
+                padding: 8px 20px;
+                text-decoration: none;
+                cursor: pointer;
+                margin-right: -10px;
+            }
+
+                .navbar a:hover {
+                    background-color: #ddd;
+                    color: black;
+                }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .rounded-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: none;
+            background-color: #65a66f;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+            .rounded-btn:hover {
+                background-color: #65a66f;
+            }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        @Html.ActionLink("Home", "Index", "Admin")
+        @Html.ActionLink("Manage Users", "Index", "ManageUsers")
+        @Html.ActionLink("Manage Roles", "Index", "ManageRoles")
+        @Html.ActionLink("Products", "Index", "Products")
+    </div>
+
+    <div class="container-fluid">
+        <div class="row justify-content-end mt-3">
+            <div class="col-auto">
+                <button type="button" onclick="openCreatePopup()" class="rounded-btn">
+                    <i class="bi bi-plus"></i> +
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>@Html.DisplayNameFor(model => model.Name)</th>
+                    <th>@Html.DisplayNameFor(model => model.Price)</th>
+                    <th>@Html.DisplayNameFor(model => model.Description)</th>
+                    <th>Image</th>
+                    <th>Edit</th>
+                    <th>Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(modelItem => item.Name)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Price)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Description)</td>
+                        <td>
+                            <img src="~/images/@item.FileName" alt="Product Image" style="max-width: 100px; max-height: 100px;">
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-primary" onclick="openEditModal('@item.ProductId')">Edit</button>
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-danger" onclick="openDeleteModal('@item.ProductId')">Delete</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+    </div>
+
+    <div class="modal fade" id="createProductModal" tabindex="-1" role="dialog" aria-labelledby="createProductModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="createProductModalLabel">Create New Product</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="closeCreatePopup()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="createProductForm" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <label for="productName">Product Name</label>
+                            <input type="text" class="form-control" id="productName" name="Name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="productPrice">Product Price</label>
+                            <input type="number" class="form-control" id="productPrice" name="Price" required min="1">
+                        </div>
+                        <div class="form-group">
+                            <label for="productDescription">Product Description</label>
+                            <textarea class="form-control" id="productDescription" name="Description"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="productImage">Product Image (only .jpg, .jpeg, .png)</label>
+                            <input type="file" class="form-control-file" id="productImage" name="ImageName" accept=".jpg, .jpeg, .png">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="closeCreatePopup()">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="createProduct()">Create Product</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="deleteConfirmationModal" tabindex="-1" role="dialog" aria-labelledby="deleteConfirmationModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteConfirmationModalLabel">Delete Product</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="closeDeletePopup()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to delete this product?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="closeDeletePopup()">Cancel</button>
+                    <button id="confirmDeleteBtn" type="button" class="btn btn-danger">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="editProductModal" tabindex="-1" role="dialog" aria-labelledby="editProductModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editProductModalLabel">Edit Product</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="closeEditPopup()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="editProductForm" enctype="multipart/form-data">
+                        <input type="hidden" id="editProductId" name="ProductId" value="">
+                        <div class="form-group">
+                            <label for="editProductName">Product Name</label>
+                            <input type="text" class="form-control" id="editProductName" name="Name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editProductPrice">Product Price</label>
+                            <input type="number" class="form-control" id="editProductPrice" name="Price" required min="1">
+                        </div>
+                        <div class="form-group">
+                            <label for="editProductDescription">Product Description</label>
+                            <textarea class="form-control" id="editProductDescription" name="Description"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="editProductImage">Select Image</label>
+                            <select class="form-control" id="editProductImage" name="ImageId">
+                            </select>
+                        </div>
+                    </form>
+                    <div class="image-preview">
+                        <img id="selectedImage" src="#" alt="Selected Image" style="max-width: 100px; max-height: 100px;">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="closeEditPopup()">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="updateProduct()">Save Changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        function openCreatePopup() {
+            $('#createProductModal').modal('show');
+        }
+
+        function createProduct() {
+            var productName = $('#productName').val();
+            var productPrice = $('#productPrice').val();
+            var productDescription = $('#productDescription').val();
+            var productImage = $('#productImage').prop('files')[0];
+
+            var formData = new FormData();
+
+            formData.append('Name', productName);
+            formData.append('Price', productPrice);
+            formData.append('Description', productDescription);
+            formData.append('FileName', productImage.name);
+
+            var reader = new FileReader();
+            reader.onload = function (event) {
+                formData.append('Data', event.target.result.split(',')[1]);
+                formData.append('ContentType', productImage.type);
+                formData.append('Size', productImage.size);
+
+                $.ajax({
+                    url: '/Products/CreateNewProduct',
+                    type: 'POST',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function (response) {
+                        window.location.reload();
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error creating a new product:', error);
+                        alert('Error creating a new product. Please try again or contact the administrator.');
+                    }
+                });
+            };
+            reader.readAsDataURL(productImage);
+        }
+        function openDeleteModal(productId) {
+            $('#deleteConfirmationModal').modal('show');
+            $('#confirmDeleteBtn').attr('data-product-id', productId);
+        }
+
+        $('#confirmDeleteBtn').click(function () {
+            var productId = $(this).data('product-id');
+            deleteProduct(productId);
+            $('#deleteConfirmationModal').modal('hide');
+        });
+
+        function deleteProduct(productId) {
+            $.ajax({
+                url: '/Products/DeleteProduct',
+                type: 'POST',
+                data: { id: productId },
+                success: function (response) {
+                    window.location.reload();
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error deleting product:', error);
+                    alert('Error deleting product. Please try again or contact the administrator.');
+                }
+            });
+        }
+
+        function openEditModal(productId) {
+            var response;
+            $.ajax({
+                url: '/Products/GetProductDetails',
+                type: 'GET',
+                data: { id: productId },
+                success: function (responseData) {
+                    response = responseData;
+                    console.log(response);
+                    $('#editProductId').val(response.productId);
+                    $('#editProductName').val(response.name);
+                    $('#editProductPrice').val(response.price);
+                    $('#editProductDescription').val(response.description);
+
+                    var selectImageDropdown = $('#editProductImage');
+                    selectImageDropdown.empty();
+
+                    if (Array.isArray(response.images)) {
+                        response.images.forEach(function (image) {
+                            var option = $('<option>', {
+                                value: image.imageId
+                            }).text(image.fileName);
+                            selectImageDropdown.append(option);
+                        });
+                    } else {
+                        console.error('Images array is not an array:', response.images);
+                    }
+
+                    selectImageDropdown.change(function () {
+                        var selectedImageId = $(this).val();
+                        var selectedImage = response.images.find(function (image) {
+                            return image.imageId == selectedImageId;
+                        });
+
+                        $('#selectedImage').attr('src', 'data:' + selectedImage.contentType + ';base64,' + selectedImage.data);
+                    });
+                    debugger;
+                    selectImageDropdown.change();
+                    debugger;
+                    $('#editProductModal').modal('show');
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error fetching product details:', error);
+                    alert('Error fetching product details. Please try again or contact the administrator.');
+                }
+            });
+        }
+        function updateProduct() {
+            var productId = $('#editProductId').val();
+            var productName = $('#editProductName').val();
+            var productPrice = $('#editProductPrice').val();
+            var productDescription = $('#editProductDescription').val();
+            var productImageId = $('#editProductImage').val(); 
+
+            var productDto = {
+                ProductId: productId,
+                Name: productName,
+                Price: productPrice,
+                Description: productDescription,
+                ImageId: productImageId,
+                FileName: $('#editProductImage option:selected').text(), 
+            };
+
+            $.ajax({
+                url: '/Products/UpdateProduct',
+                type: 'POST',
+                data: JSON.stringify(productDto),
+                contentType: 'application/json',
+                success: function (response) {
+                    $('#editProductModal').modal('hide');
+                    window.location.reload();
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error updating product:', error);
+                    alert('Error updating product. Please try again or contact the administrator.');
+                }
+            });
+        }
+
+        function closeCreatePopup() {
+            $('#createProductModal').modal('hide');
+        }
+
+        function closeEditPopup() {
+            $('#editProductModal').modal('hide');
+        }
+
+        function closeDeletePopup() {
+            $('#deleteConfirmationModal').modal('hide');
+        }
+
+
+
+ 
+    </script>
+</body>
+</html>

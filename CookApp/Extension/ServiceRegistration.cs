@@ -4,6 +4,7 @@ using CookApp.DAL.IRepository;
 using CookApp.DAL.Repository;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 
 namespace CookApp.API.Extension
 {
@@ -20,6 +21,8 @@ namespace CookApp.API.Extension
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IRoleService, RoleService>();
+            services.AddScoped<IFileUploadService, FileUploadService>();
+             
             //Registration Generic Repository
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 

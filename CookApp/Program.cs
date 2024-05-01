@@ -1,9 +1,12 @@
 using CookApp.API.Extension;
 using CookApp.BLL.AutoMapper;
+using CookApp.BLL.IServices;
+using CookApp.BLL.Services;
 using CookApp.DAL;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
@@ -32,7 +35,11 @@ builder.Services.AddAuthentication(options =>
         ValidateIssuerSigningKey = true
     };
 });
-
+builder.Services.AddTransient<IImageService>(provider =>
+{
+    string imagesPath = builder.Configuration.GetValue<string>("ImagesPath");
+    return new ImageService(imagesPath);
+});
 var app = builder.Build();
 
 if (!app.Environment.IsDevelopment())
@@ -60,9 +67,9 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Admin}/{action=Index}/{id?}");
 
-
+//Home
 app.MapControllerRoute(
        name: "menu",
        pattern: "Menu",

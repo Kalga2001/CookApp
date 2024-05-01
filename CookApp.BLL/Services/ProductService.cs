@@ -14,9 +14,11 @@ namespace CookApp.BLL.Services
     public class ProductService : IProductService
     {
         private readonly IGenericRepository<Product> _productRepository;
-        public ProductService(IGenericRepository<Product> productRepository)
+        private readonly IGenericRepository<Image> _imageRepository;
+        public ProductService(IGenericRepository<Product> productRepository, IGenericRepository<Image> imageRepository)
         {
             _productRepository = productRepository;
+            _imageRepository = imageRepository;
         }
         public async Task AddNewProduct(ProductDto productDto)
         {
@@ -25,11 +27,18 @@ namespace CookApp.BLL.Services
                 Description = productDto.Description,
                 Price = productDto.Price,
                 Name = productDto.Name,
-                ImageName = productDto.ImageName
+                Image = new Image
+                {
+                    FileName = productDto.FileName,
+                    Data = productDto.Data,
+                    ContentType = productDto.ContentType,
+                    Size = productDto.Size
+                }
             };
 
-           await _productRepository.AddAsync(newProduct);
+            await _productRepository.AddAsync(newProduct);
         }
+
 
         public async Task DeleteProduct(int productId)
         {
@@ -44,18 +53,41 @@ namespace CookApp.BLL.Services
 
         public async Task<Product> GetProductById(int productId)
         {
-            var product = await _productRepository.GetByIdAsync(productId);
+
+            var product = _productRepository.GetAllAsyncQuery().Include(x => x.Image).FirstOrDefault(x => x.Id == productId);
+
             return product;
         }
         public async Task UpdateProduct(int productId, ProductDto productDto)
         {
             var product = await _productRepository.GetByIdAsync(productId);
-            product.Name = productDto.Name;
-            product.Description = productDto.Description;
-            product.Price = productDto.Price;
-            product.ImageName = productDto.ImageName;
 
-            await _productRepository.Update(product);
+            var image = await _imageRepository.GetByIdAsync(productDto.ImageId);
+
+            if (product != null)
+            {
+                product.Name = productDto.Name;
+                product.Description = productDto.Description;
+                product.Price = productDto.Price;
+
+                product.Image = image;
+
+                await _productRepository.Update(product);
+
+            }
+        }
+
+        public async Task<IQueryable<Image>> GetAllImagesExceptCurrentProductImage(int productId)
+        {
+            var product = await _productRepository.GetByIdAsync(productId);
+            var allImages = _imageRepository.GetAllAsyncQuery(); 
+
+            if (product != null && product.Image != null)
+            {
+                allImages = allImages.Where(image => image.Id != product.Image.Id);
+            }
+
+            return allImages;
         }
     }
 }
