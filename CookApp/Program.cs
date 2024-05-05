@@ -71,11 +71,6 @@ app.MapControllerRoute(
 
 //Home
 app.MapControllerRoute(
-       name: "menu",
-       pattern: "Menu",
-       defaults: new { controller = "Home", action = "Menu" });
-
-app.MapControllerRoute(
         name: "about",
         pattern: "About",
         defaults: new { controller = "Home", action = "About" });

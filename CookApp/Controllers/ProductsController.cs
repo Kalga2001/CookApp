@@ -125,8 +125,6 @@ namespace CookApp.API.Controllers
             }
         }
 
-
-
         [HttpPost]
         public async Task<IActionResult> DeleteProduct(int id)
         {
