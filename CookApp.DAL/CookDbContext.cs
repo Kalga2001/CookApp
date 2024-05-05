@@ -20,6 +20,8 @@ namespace CookApp.DAL
         public DbSet<UserRole> UserRole { get; set; }
         public DbSet<Product> Product { get; set; }
         public DbSet<Image> Image { get; set; }
+        public DbSet<Table> Table { get; set; }
+        public DbSet<Reservation> Reservation { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.ApplyConfiguration(new RoleConfiguration());

@@ -1,130 +1,99 @@
-﻿<!DOCTYPE html>
+﻿@{
+    ViewData["Title"] = "Home";
+}
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <!--
-      - primary meta tags
-    -->
     <title>Grilli - Amazing & Delicious Food</title>
-    <meta name="title" content="Grilli - Amazing & Delicious Food">
     <meta name="description" content="This is a Restaurant html template made by codewithsadee">
-
-    <!--
-      - favicon
-    -->
     <link rel="shortcut icon" href="./favicon.svg" type="image/svg+xml">
-
-    <!--
-      - google font link
-    -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;700&family=Forum&display=swap" rel="stylesheet">
-
-    <!--
-      - custom css link
-    -->
     <link rel="stylesheet" href="~/css/style.min.css">
-
-    <!--
-      - preload images
-    -->
     <link rel="preload" as="image" href="./images/hero-slider-1.jpg">
     <link rel="preload" as="image" href="./images/hero-slider-2.jpg">
     <link rel="preload" as="image" href="./images/hero-slider-3.jpg">
+    <style>
+        .reservation .form {
+            margin-top: 50px;
+        }
 
+        .popup-container {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            z-index: 9999;
+        }
+
+        .popup-content {
+            text-align: center;
+        }
+    </style>
 </head>
 
 <body id="top">
-
-    <!--
-      - #PRELOADER
-    -->
-
     <div class="preload" data-preaload>
         <div class="circle"></div>
         <p class="text">Grilli</p>
     </div>
-
-
-    <!--
-      - #TOP BAR
-    -->
-
     <div class="topbar">
         <div class="container">
             <div class="separator"></div>
-
         </div>
     </div>
-
     <header class="header" data-header>
         <div class="container">
-
             <a href="/Home" class="logo">
                 <img src="./images/logo.svg" width="160" height="50" alt="Grilli - Home">
             </a>
-
         </div>
     </header>
 
-
     <main>
         <article>
- 
             <section class="reservation">
+                <div id="reservation-message" class="reservation-message"></div>
                 <div class="container">
-
                     <div class="form reservation-form bg-black-10">
-
-                        <form action="" class="form-left">
-
+                        <form id="reservation-form" action="/Reservation/MakeReservation" class="form-left" method="post">
                             <h2 class="headline-1 text-center">Online Reservation</h2>
-
-                            <p class="form-text text-center">
-                                Booking request <a href="tel:+88123123456" class="link">+88-123-123456</a>
-                                or fill out the order form
-                            </p>
-
+                            <p class="form-text text-center">Booking request <a href="tel:+88123123456" class="link">+88-123-123456</a> or fill out the order form</p>
                             <div class="input-wrapper">
-                                <input type="text" name="name" placeholder="Your Name" autocomplete="off" class="input-field">
-
-                                <input type="tel" name="phone" placeholder="Phone Number" autocomplete="off" class="input-field">
+                                <input type="text" name="Name" placeholder="Your Name" autocomplete="off" class="input-field">
                             </div>
-
                             <div class="input-wrapper">
-
                                 <div class="icon-wrapper">
                                     <ion-icon name="person-outline" aria-hidden="true"></ion-icon>
-
-                                    <select name="person" class="input-field">
-                                        <option value="1-person">1 Person</option>
-                                        <option value="2-person">2 Person</option>
-                                        <option value="3-person">3 Person</option>
-                                        <option value="4-person">4 Person</option>
-                                        <option value="5-person">5 Person</option>
-                                        <option value="6-person">6 Person</option>
-                                        <option value="7-person">7 Person</option>
+                                    <select name="NumberOfPeople" class="input-field">
+                                        <option value="1">1 Person</option>
+                                        <option value="2">2 Person</option>
+                                        <option value="3">3 Person</option>
+                                        <option value="4">4 Person</option>
+                                        <option value="5">5 Person</option>
+                                        <option value="6">6 Person</option>
+                                        <option value="7">7 Person</option>
                                     </select>
-
                                     <ion-icon name="chevron-down" aria-hidden="true"></ion-icon>
                                 </div>
-
                                 <div class="icon-wrapper">
                                     <ion-icon name="calendar-clear-outline" aria-hidden="true"></ion-icon>
-
-                                    <input type="date" name="reservation-date" class="input-field">
-
+                                    <input type="date" name="ReservationDate" class="input-field">
                                     <ion-icon name="chevron-down" aria-hidden="true"></ion-icon>
                                 </div>
-
                                 <div class="icon-wrapper">
                                     <ion-icon name="time-outline" aria-hidden="true"></ion-icon>
-
-                                    <select name="person" class="input-field">
+                                    <select name="Time" class="input-field">
                                         <option value="08:00am">08 : 00 am</option>
                                         <option value="09:00am">09 : 00 am</option>
                                         <option value="010:00am">10 : 00 am</option>
@@ -141,70 +110,96 @@
                                         <option value="09:00pm">09 : 00 pm</option>
                                         <option value="10:00pm">10 : 00 pm</option>
                                     </select>
-
                                     <ion-icon name="chevron-down" aria-hidden="true"></ion-icon>
                                 </div>
-
                             </div>
+                            <textarea name="Message" placeholder="Message" autocomplete="off" class="input-field"></textarea>
 
-                            <textarea name="message" placeholder="Message" autocomplete="off" class="input-field"></textarea>
+                            <!-- Hidden fields for TableId and UserId -->
+                            <input type="hidden" name="TableId" value="1">
+                            <input type="hidden" name="UserId" value="1">
 
                             <button type="submit" class="btn btn-secondary">
                                 <span class="text text-1">Book A Table</span>
-
                                 <span class="text text-2" aria-hidden="true">Book A Table</span>
                             </button>
-
                         </form>
 
                         <div class="form-right text-center" style="background-image: url('./images/form-pattern.png')">
-
                             <h2 class="headline-1 text-center">Contact Us</h2>
-
                             <p class="contact-label">Booking Request</p>
-
                             <a href="tel:+88123123456" class="body-1 contact-number hover-underline">+88-123-123456</a>
-
                             <div class="separator"></div>
-
                             <p class="contact-label">Location</p>
-
                             <address class="body-4">
                                 Restaurant St, Delicious City, <br>
                                 London 9578, UK
                             </address>
-
                             <p class="contact-label">Lunch Time</p>
-
                             <p class="body-4">
                                 Monday to Sunday <br>
                                 11.00 am - 2.30pm
                             </p>
-
                             <p class="contact-label">Dinner Time</p>
-
                             <p class="body-4">
                                 Monday to Sunday <br>
                                 05.00 pm - 10.00pm
                             </p>
-
                         </div>
-
                     </div>
-
                 </div>
             </section>
-
-
         </article>
     </main>
 
- 
     <script src="./js/script.min.js"></script>
- 
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
 
+    <script>
+        function showMessage(message, isSuccess) {
+            if (isSuccess) {
+                toastr.success(message);
+            } else {
+                toastr.error(message);
+            }
+        }
 
+        $(document).ready(function () {
+            $('#reservation-form').submit(function (e) {
+                e.preventDefault();
+
+                const reservationDto = {
+                    Name: $('input[name="Name"]').val(),
+                    NumberOfPeople: parseInt($('select[name="NumberOfPeople"]').val()),
+                    ReservationDate: $('input[name="ReservationDate"]').val(),
+                    Time: $('select[name="Time"]').val(),
+                    Message: $('textarea[name="Message"]').val(),
+                    TableId: $('input[name="TableId"]').val(),
+                    UserId: $('input[name="UserId"]').val()
+                };
+
+                $.ajax({
+                    url: '/Reservation/MakeReservation',
+                    method: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(reservationDto),
+                    success: function (response) {
+                        showMessage(response ? "Success" : "Error", response);
+                        setTimeout(function () {
+                            window.location.href = '/Home';
+                        }, 2000); 
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error making reservation:', error);
+                        showMessage('Error making reservation: ' + error, false);
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>

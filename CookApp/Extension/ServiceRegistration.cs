@@ -22,7 +22,8 @@ namespace CookApp.API.Extension
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IRoleService, RoleService>();
             services.AddScoped<IFileUploadService, FileUploadService>();
-             
+            services.AddScoped<IReservationService, ReservationService>();
+            services.AddScoped<ITableService, TableService>();
             //Registration Generic Repository
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 

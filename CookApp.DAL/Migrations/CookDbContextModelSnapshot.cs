@@ -77,6 +77,45 @@ namespace CookApp.DAL.Migrations
                     b.ToTable("Product");
                 });
 
+            modelBuilder.Entity("CookApp.Entity.Entity.Reservation", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("BeginTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("EndTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("NumberOfPeople")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("ReservationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("TableId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TableId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Reservation");
+                });
+
             modelBuilder.Entity("CookApp.Entity.Entity.Role", b =>
                 {
                     b.Property<int>("Id")
@@ -109,6 +148,29 @@ namespace CookApp.DAL.Migrations
                             Id = 3,
                             RoleName = "Chef"
                         });
+                });
+
+            modelBuilder.Entity("CookApp.Entity.Entity.Table", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("Capacity")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsAvailable")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Table");
                 });
 
             modelBuilder.Entity("CookApp.Entity.Entity.User", b =>
@@ -217,6 +279,25 @@ namespace CookApp.DAL.Migrations
                     b.Navigation("Image");
                 });
 
+            modelBuilder.Entity("CookApp.Entity.Entity.Reservation", b =>
+                {
+                    b.HasOne("CookApp.Entity.Entity.Table", "Table")
+                        .WithMany("Reservations")
+                        .HasForeignKey("TableId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CookApp.Entity.Entity.User", "User")
+                        .WithMany("Reservations")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Table");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("CookApp.Entity.Entity.UserRole", b =>
                 {
                     b.HasOne("CookApp.Entity.Entity.Role", "Role")
@@ -241,8 +322,15 @@ namespace CookApp.DAL.Migrations
                     b.Navigation("UserRoles");
                 });
 
+            modelBuilder.Entity("CookApp.Entity.Entity.Table", b =>
+                {
+                    b.Navigation("Reservations");
+                });
+
             modelBuilder.Entity("CookApp.Entity.Entity.User", b =>
                 {
+                    b.Navigation("Reservations");
+
                     b.Navigation("UserRoles");
                 });
 #pragma warning restore 612, 618

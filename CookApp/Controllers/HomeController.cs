@@ -47,7 +47,7 @@ namespace CookApp.API.Controllers
         {
             return View();
         }
-        [CustomAuthorize("Administrator","Client")]
+
         public IActionResult Event()
         {
             return View();

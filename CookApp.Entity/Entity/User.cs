@@ -11,5 +11,6 @@ namespace CookApp.Entity.Entity
         public ICollection<UserRole> UserRoles { get; set; }
         public DateTime? LoginDate { get; set; }
         public bool IsAuthenticated { get; set; }
+        public ICollection<Reservation> Reservations { get; set; }
     }
 }
