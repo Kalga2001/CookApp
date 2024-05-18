@@ -39,6 +39,86 @@
         .popup-content {
             text-align: center;
         }
+
+        .spacer {
+            margin-bottom: 20px;
+            width: 100%;
+            height: 0;
+        }
+
+        #select-product-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: green;
+            border: none;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-right: 5px;
+        }
+
+            #select-product-btn:hover {
+                background-color: darkgreen;
+            }
+
+            #select-product-btn ion-icon {
+                font-size: 20px;
+            }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.7);
+        }
+
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #fefefe;
+            padding: 20px;
+            border: 1px solid #888;
+            border-radius: 10px;
+            width: 80%;
+            max-width: 600px;
+        }
+
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+            .close:hover,
+            .close:focus {
+                color: black;
+                text-decoration: none;
+                cursor: pointer;
+            }
+
+        .menu-card {
+            margin-bottom: 20px;
+        }
+
+        #menu-items-modal {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+ 
     </style>
 </head>
 
@@ -114,15 +194,17 @@
                                 </div>
                             </div>
                             <textarea name="Message" placeholder="Message" autocomplete="off" class="input-field"></textarea>
-
-                            <!-- Hidden fields for TableId and UserId -->
+                          
                             <input type="hidden" name="TableId" value="1">
                             <input type="hidden" name="UserId" value="1">
+
+                            <div class="spacer"></div>
 
                             <button type="submit" class="btn btn-secondary">
                                 <span class="text text-1">Book A Table</span>
                                 <span class="text text-2" aria-hidden="true">Book A Table</span>
                             </button>
+
                         </form>
 
                         <div class="form-right text-center" style="background-image: url('./images/form-pattern.png')">
@@ -191,7 +273,7 @@
                         showMessage(response ? "Success" : "Error", response);
                         setTimeout(function () {
                             window.location.href = '/Home';
-                        }, 2000); 
+                        }, 2000);
                     },
                     error: function (xhr, status, error) {
                         console.error('Error making reservation:', error);

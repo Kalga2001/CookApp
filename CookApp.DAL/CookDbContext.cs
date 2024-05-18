@@ -22,12 +22,15 @@ namespace CookApp.DAL
         public DbSet<Image> Image { get; set; }
         public DbSet<Table> Table { get; set; }
         public DbSet<Reservation> Reservation { get; set; }
+        public DbSet<Order> Order { get; set; }
+        public DbSet<Cart> Cart { get; set; }
+        public DbSet<CartItem> CartItem { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.ApplyConfiguration(new RoleConfiguration());
             builder.ApplyConfiguration(new UserConfiguration());
             builder.ApplyConfiguration(new UserRoleConfiguration());
-
+            builder.ApplyConfiguration(new TableConfiguration());
 
             base.OnModelCreating(builder);
         }

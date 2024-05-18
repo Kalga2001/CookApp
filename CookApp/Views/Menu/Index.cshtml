@@ -11,10 +11,105 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;700&family=Forum&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" rel="stylesheet">
     <link rel="stylesheet" href="~/css/style.min.css">
     <link rel="preload" as="image" href="./images/hero-slider-1.jpg">
     <link rel="preload" as="image" href="./images/hero-slider-2.jpg">
     <link rel="preload" as="image" href="./images/hero-slider-3.jpg">
+  <style>
+
+    .shopping-cart-button,
+    .qty-input {
+        padding: 0.5rem; 
+        min-width: 100px; 
+        height: 2.5rem;
+        display: flex;
+        align-items: center; 
+        justify-content: center;
+    }
+
+    .shopping-cart-button {
+        background-color: #1779ba;
+    }
+
+    .shopping-cart-button:hover {
+        background-color: #115b8d;
+    }
+
+    .shopping-cart-button i,
+    .shopping-cart-button span.text,
+    .qty-input {
+        display: inline-block;
+        vertical-align: middle;
+    }
+
+    .shopping-cart-button i {
+        margin-right: 0.5rem;
+    }
+
+    .quantity-and-buy-container {
+        display: flex;
+        align-items: center; 
+    }
+
+        .product-qty {
+            width: 50px;
+            padding: 5px;
+            height: 30px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            text-align: center;
+            background-color: #fff; 
+        }
+
+        .qty-count {
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+            .qty-count:hover {
+                background-color: #e0e0e0;
+            }
+
+            .qty-count::before {
+                content: "+";
+            }
+
+        .qty-count--minus::before {
+            content: "-";
+        }
+
+        .qty-input {
+            display: flex;
+            align-items: center;
+        }
+
+        .product-qty,
+        .qty-count {
+            margin: 0 5px;
+            width: 30px;
+        }
+
+
+
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    input[type="number"] {
+        -moz-appearance: textfield;
+    }
+
+    .card-text {
+        margin-bottom: 10px; 
+    }
+</style>
+
 </head>
 <body id="top">
 
@@ -25,12 +120,32 @@
         </div>
     </div>
     <header class="header" data-header>
-        <div class="container">
+        <div class="container" style="display: flex; justify-content: space-between; align-items: center;">
             <a href="/Home" class="logo">
                 <img src="/images/logo.svg" width="160" height="50" alt="Grilli - Home">
             </a>
+            <a href="/Cart/Index">
+            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="70" height="70" viewBox="0 0 256 256" xml:space="preserve">
+
+            <defs>
+            </defs>
+            <g style="stroke: none; stroke-width: 0; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: none; fill-rule: nonzero; opacity: 1;" transform="translate(1.4065934065934016 1.4065934065934016) scale(2.81 2.81)">
+            <circle cx="45" cy="45" r="45" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(32,196,203); fill-rule: nonzero; opacity: 1;" transform="  matrix(1 0 0 1 0 0) " />
+            <path d="M 20.907 41.898 c -0.64 0 -1.28 -0.244 -1.768 -0.732 c -0.977 -0.976 -0.977 -2.559 0 -3.535 l 12.189 -12.189 c 0.976 -0.977 2.56 -0.977 3.535 0 c 0.977 0.976 0.977 2.559 0 3.535 L 22.674 41.166 C 22.187 41.654 21.546 41.898 20.907 41.898 z" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(27,167,173); fill-rule: nonzero; opacity: 1;" transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round" />
+            <path d="M 65.204 37.465 H 13.558 c -0.998 0 -1.744 0.735 -1.541 1.517 l 7.695 29.598 c 0.152 0.585 0.795 1.003 1.541 1.003 H 57.51 c 0.746 0 1.389 -0.419 1.541 -1.003 l 7.695 -29.598 C 66.949 38.2 66.203 37.465 65.204 37.465 z M 30.853 62.887 c 0 0.536 -0.435 0.971 -0.971 0.971 h -3.03 c -0.536 0 -0.971 -0.435 -0.971 -0.971 V 44.939 c 0 -0.536 0.435 -0.971 0.971 -0.971 h 3.03 c 0.536 0 0.971 0.435 0.971 0.971 V 62.887 z M 41.867 62.887 c 0 0.536 -0.435 0.971 -0.971 0.971 h -3.03 c -0.536 0 -0.971 -0.435 -0.971 -0.971 V 44.939 c 0 -0.536 0.435 -0.971 0.971 -0.971 h 3.03 c 0.536 0 0.971 0.435 0.971 0.971 V 62.887 z M 52.882 62.887 c 0 0.536 -0.435 0.971 -0.971 0.971 h -3.03 c -0.536 0 -0.971 -0.435 -0.971 -0.971 V 44.939 c 0 -0.536 0.435 -0.971 0.971 -0.971 h 3.03 c 0.536 0 0.971 0.435 0.971 0.971 V 62.887 z" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(27,167,173); fill-rule: nonzero; opacity: 1;" transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round" />
+            <path d="M 57.855 41.898 c -0.64 0 -1.279 -0.244 -1.768 -0.732 L 43.898 28.977 c -0.977 -0.976 -0.977 -2.559 0 -3.535 c 0.976 -0.977 2.559 -0.977 3.535 0 L 59.623 37.63 c 0.977 0.976 0.977 2.559 0 3.535 C 59.135 41.654 58.495 41.898 57.855 41.898 z" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(27,167,173); fill-rule: nonzero; opacity: 1;" transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round" />
+            <path d="M 23.764 39.042 c -0.64 0 -1.28 -0.244 -1.768 -0.732 c -0.977 -0.976 -0.977 -2.559 0 -3.535 l 12.189 -12.189 c 0.976 -0.977 2.56 -0.977 3.535 0 c 0.977 0.976 0.977 2.559 0 3.535 L 25.531 38.309 C 25.043 38.797 24.403 39.042 23.764 39.042 z" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(255,255,255); fill-rule: nonzero; opacity: 1;" transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round" />
+            <path d="M 68.061 34.609 H 16.415 c -0.998 0 -1.744 0.735 -1.541 1.517 l 7.695 29.598 c 0.152 0.585 0.795 1.003 1.541 1.003 h 36.257 c 0.746 0 1.389 -0.419 1.541 -1.003 l 7.695 -29.598 C 69.805 35.343 69.059 34.609 68.061 34.609 z M 33.71 60.03 c 0 0.536 -0.435 0.971 -0.971 0.971 h -3.03 c -0.536 0 -0.971 -0.435 -0.971 -0.971 V 42.083 c 0 -0.536 0.435 -0.971 0.971 -0.971 h 3.03 c 0.536 0 0.971 0.435 0.971 0.971 V 60.03 z M 44.724 60.03 c 0 0.536 -0.435 0.971 -0.971 0.971 h -3.03 c -0.536 0 -0.971 -0.435 -0.971 -0.971 V 42.083 c 0 -0.536 0.435 -0.971 0.971 -0.971 h 3.03 c 0.536 0 0.971 0.435 0.971 0.971 V 60.03 z M 55.738 60.03 c 0 0.536 -0.435 0.971 -0.971 0.971 h -3.03 c -0.536 0 -0.971 -0.435 -0.971 -0.971 V 42.083 c 0 -0.536 0.435 -0.971 0.971 -0.971 h 3.03 c 0.536 0 0.971 0.435 0.971 0.971 V 60.03 z" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(255,255,255); fill-rule: nonzero; opacity: 1;" transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round" />
+            <path d="M 60.712 39.042 c -0.64 0 -1.279 -0.244 -1.768 -0.732 L 46.755 26.12 c -0.977 -0.976 -0.977 -2.559 0 -3.535 c 0.977 -0.977 2.559 -0.977 3.535 0 l 12.189 12.189 c 0.977 0.976 0.977 2.559 0 3.535 C 61.991 38.797 61.352 39.042 60.712 39.042 z" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(255,255,255); fill-rule: nonzero; opacity: 1;" transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round" />
+            <circle cx="65.315" cy="61.595" r="16.665" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(32,196,203); fill-rule: nonzero; opacity: 1;" transform="  matrix(1 0 0 1 0 0) " />
+            <circle cx="62" cy="64" r="13" fill="white" />
+            <text x="62" y="69" font-size="12" text-anchor="middle" id="total-quantity" fill="black">0</text>
+            </g>
+            </svg>
+            </a>
         </div>
     </header>
+
 
     <main>
         <article>
@@ -39,17 +154,71 @@
                     <p class="section-subtitle text-center label-2">Special Selection</p>
                     <h2 class="headline-1 section-title text-center">Delicious Menu</h2>
                     <ul class="grid-list" id="menu-items">
-                        <!-- Menu items will be dynamically populated here -->
+ 
                     </ul>
-                    <p class="menu-text text-center">
-                        During winter daily from <span class="span">7:00 pm</span> to <span class="span">9:00 pm</span>
-                    </p>
                 </div>
             </section>
         </article>
     </main>
 
     <script>
+        function updateTotalQuantity() {
+            debugger;
+            let totalQuantity = parseInt(document.getElementById('total-quantity').textContent) || 0;
+
+            const quantityInputs = document.querySelectorAll('.product-qty');
+
+            quantityInputs.forEach(input => {
+                totalQuantity += parseInt(input.value) || 0;
+            });
+
+            document.getElementById('total-quantity').textContent = totalQuantity;
+        }
+
+        function resetProductQuantity(button) {
+            const inputField = button.parentNode.querySelector('.product-qty');
+            inputField.value = 0;
+        }
+
+        function shoppingCartClick(button , productId, quantity) {
+            const data = {
+                ProductId: productId,
+                Quantity: quantity
+            };
+ 
+            fetch('/CartItem/AddToCart', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    updateTotalQuantity();
+                    resetProductQuantity(button);
+                    return response.json();
+                })
+                .then(data => {
+                    console.log(data); 
+                })
+                .catch(error => {
+                    console.error('There was a problem with the fetch operation:', error);
+                });
+        }
+
+
+ 
+        function handleQuantityChange(button) {
+            const inputField = button.parentNode.querySelector('.product-qty');
+            let value = parseInt(inputField.value);
+            const action = button.dataset.action;
+            value = action === 'add' ? value + 1 : Math.max(1, value - 1);
+            inputField.value = value;      
+        }
+ 
         fetch('/Menu/GetMenu')
             .then(response => response.json())
             .then(menuItems => {
@@ -69,13 +238,22 @@
                                             <span class="span title-2">$${item.price.toFixed(2)}</span>
                                         </div>
                                         <p class="card-text label-1">${item.description}</p>
+                                        <div class="quantity-and-buy-container">
+                                            <div class="qty-input">
+                                                <button class="qty-count qty-count--minus" data-action="minus" type="button" onclick="handleQuantityChange(this)"></button>
+                                                <input class="product-qty" type="number" name="quantity" min="0" value="0">
+                                                <button class="qty-count qty-count--add" data-action="add" type="button" onclick="handleQuantityChange(this)"></button>
+                                            </div>
+                                                                  <button type="button" class="shopping-cart-button float-right" data-toggle="shopping-cart-dropdown" onclick="shoppingCartClick(this, ${item.productId}, parseInt(this.parentNode.querySelector('.product-qty').value))">
+                                                <i class="fa fa-shopping-cart"></i>
+                                                <span class="text">Shopping Cart</span>
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
-                            </li>
-                        `;
+                            </li>`;
                     menuList.innerHTML += menuItem;
                 });
-                // Resize images
                 const menuImages = document.querySelectorAll('.menu-item-image');
                 menuImages.forEach(image => {
                     image.style.width = '100px';
@@ -84,6 +262,7 @@
             })
             .catch(error => console.error('Error fetching menu items:', error));
     </script>
+
 
 
     <!-- Other scripts -->

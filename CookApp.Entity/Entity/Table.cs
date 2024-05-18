@@ -12,6 +12,6 @@ namespace CookApp.Entity.Entity
         public int Capacity { get; set; } 
         public bool IsAvailable { get; set; }
 
-        public ICollection<Reservation> Reservations { get; set; }
+        public ICollection<Reservation>? Reservations { get; set; }
     }
 }
