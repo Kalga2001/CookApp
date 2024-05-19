@@ -322,9 +322,7 @@
 
                         $('#selectedImage').attr('src', 'data:' + selectedImage.contentType + ';base64,' + selectedImage.data);
                     });
-                    debugger;
                     selectImageDropdown.change();
-                    debugger;
                     $('#editProductModal').modal('show');
                 },
                 error: function (xhr, status, error) {

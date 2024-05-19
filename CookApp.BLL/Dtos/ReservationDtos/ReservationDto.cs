@@ -12,7 +12,7 @@ namespace CookApp.BLL.Dtos.ReservationDtos
         public int TableId { get; set; }
         public int UserId { get; set; } 
         public DateTime ReservationDate { get; set; }
-        public DateTime Time { get; set; }
+        public TimeSpan Time { get; set; }
         public int NumberOfPeople { get; set; } 
         public string Message { get; set; }
     }

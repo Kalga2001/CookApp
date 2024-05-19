@@ -12,6 +12,10 @@ namespace CookApp.BLL.IServices
     public interface IReservationService
     {
         Task<bool> MakeReservation(ReservationDto reservationDto);
-
+        Task<List<string>> GetAvailableTimes(DateTime reservationDate, int? tableId);
+        Task<List<int>> GetAvailableTables(DateTime? reservationDate, string time);
+        Task<List<int>> GetTables();
+        List<string> GetTime();
     }
+
 }

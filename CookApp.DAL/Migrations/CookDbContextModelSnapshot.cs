@@ -22,6 +22,60 @@ namespace CookApp.DAL.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("CookApp.Entity.Entity.Cart", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CartState")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Cart");
+                });
+
+            modelBuilder.Entity("CookApp.Entity.Entity.CartItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("AddedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("CartId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("TotalPrice")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CartId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("CartItem");
+                });
+
             modelBuilder.Entity("CookApp.Entity.Entity.Image", b =>
                 {
                     b.Property<int>("Id")
@@ -47,6 +101,43 @@ namespace CookApp.DAL.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Image");
+                });
+
+            modelBuilder.Entity("CookApp.Entity.Entity.Order", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("CartId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("OrderDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("OrderStatus")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PaymentStatus")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TableId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("TotalAmount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CartId")
+                        .IsUnique()
+                        .HasFilter("[CartId] IS NOT NULL");
+
+                    b.HasIndex("TableId");
+
+                    b.ToTable("Order");
                 });
 
             modelBuilder.Entity("CookApp.Entity.Entity.Product", b =>
@@ -85,11 +176,11 @@ namespace CookApp.DAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("BeginTime")
-                        .HasColumnType("datetime2");
+                    b.Property<TimeSpan>("BeginTime")
+                        .HasColumnType("time");
 
-                    b.Property<DateTime>("EndTime")
-                        .HasColumnType("datetime2");
+                    b.Property<TimeSpan>("EndTime")
+                        .HasColumnType("time");
 
                     b.Property<string>("Message")
                         .IsRequired()
@@ -171,6 +262,78 @@ namespace CookApp.DAL.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Table");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Capacity = 0,
+                            IsAvailable = true,
+                            Name = "Table 1"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Capacity = 0,
+                            IsAvailable = true,
+                            Name = "Table 2"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Capacity = 0,
+                            IsAvailable = true,
+                            Name = "Table 3"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Capacity = 0,
+                            IsAvailable = true,
+                            Name = "Table 4"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Capacity = 0,
+                            IsAvailable = true,
+                            Name = "Table 5"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Capacity = 0,
+                            IsAvailable = true,
+                            Name = "Table 6"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Capacity = 0,
+                            IsAvailable = true,
+                            Name = "Table 7"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Capacity = 0,
+                            IsAvailable = true,
+                            Name = "Table 8"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Capacity = 0,
+                            IsAvailable = true,
+                            Name = "Table 9"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            Capacity = 0,
+                            IsAvailable = true,
+                            Name = "Table 10"
+                        });
                 });
 
             modelBuilder.Entity("CookApp.Entity.Entity.User", b =>
@@ -268,6 +431,42 @@ namespace CookApp.DAL.Migrations
                         });
                 });
 
+            modelBuilder.Entity("CookApp.Entity.Entity.CartItem", b =>
+                {
+                    b.HasOne("CookApp.Entity.Entity.Cart", "Cart")
+                        .WithMany("Items")
+                        .HasForeignKey("CartId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CookApp.Entity.Entity.Product", "Product")
+                        .WithMany("CartItems")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Cart");
+
+                    b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("CookApp.Entity.Entity.Order", b =>
+                {
+                    b.HasOne("CookApp.Entity.Entity.Cart", "Cart")
+                        .WithOne("Order")
+                        .HasForeignKey("CookApp.Entity.Entity.Order", "CartId");
+
+                    b.HasOne("CookApp.Entity.Entity.Table", "Table")
+                        .WithMany()
+                        .HasForeignKey("TableId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Cart");
+
+                    b.Navigation("Table");
+                });
+
             modelBuilder.Entity("CookApp.Entity.Entity.Product", b =>
                 {
                     b.HasOne("CookApp.Entity.Entity.Image", "Image")
@@ -315,6 +514,19 @@ namespace CookApp.DAL.Migrations
                     b.Navigation("Role");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("CookApp.Entity.Entity.Cart", b =>
+                {
+                    b.Navigation("Items");
+
+                    b.Navigation("Order")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("CookApp.Entity.Entity.Product", b =>
+                {
+                    b.Navigation("CartItems");
                 });
 
             modelBuilder.Entity("CookApp.Entity.Entity.Role", b =>

@@ -1,5 +1,5 @@
 ﻿@{
-    ViewData["Title"] = "Home";
+    ViewData["Title"] = "Reservation";
 }
 
 <!DOCTYPE html>
@@ -118,15 +118,11 @@
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 20px;
         }
- 
     </style>
 </head>
 
 <body id="top">
-    <div class="preload" data-preaload>
-        <div class="circle"></div>
-        <p class="text">Grilli</p>
-    </div>
+ 
     <div class="topbar">
         <div class="container">
             <div class="separator"></div>
@@ -135,7 +131,7 @@
     <header class="header" data-header>
         <div class="container">
             <a href="/Home" class="logo">
-                <img src="./images/logo.svg" width="160" height="50" alt="Grilli - Home">
+                <img src="/images/logo.svg" width="160" height="50" alt="Grilli - Home">
             </a>
         </div>
     </header>
@@ -150,9 +146,9 @@
                             <h2 class="headline-1 text-center">Online Reservation</h2>
                             <p class="form-text text-center">Booking request <a href="tel:+88123123456" class="link">+88-123-123456</a> or fill out the order form</p>
                             <div class="input-wrapper">
-                                <input type="text" name="Name" placeholder="Your Name" autocomplete="off" class="input-field">
-                            </div>
-                            <div class="input-wrapper">
+                                <div class="icon-wrapper">
+                                    <input type="text" name="Name" placeholder="Your Name" autocomplete="off" class="input-field">
+                                </div>
                                 <div class="icon-wrapper">
                                     <ion-icon name="person-outline" aria-hidden="true"></ion-icon>
                                     <select name="NumberOfPeople" class="input-field">
@@ -166,35 +162,38 @@
                                     </select>
                                     <ion-icon name="chevron-down" aria-hidden="true"></ion-icon>
                                 </div>
+                            </div>
+                            <div class="input-wrapper">
                                 <div class="icon-wrapper">
                                     <ion-icon name="calendar-clear-outline" aria-hidden="true"></ion-icon>
-                                    <input type="date" name="ReservationDate" class="input-field">
+                                    <input type="date" id="reservation-date" name="ReservationDate" class="input-field">
                                     <ion-icon name="chevron-down" aria-hidden="true"></ion-icon>
                                 </div>
+
                                 <div class="icon-wrapper">
                                     <ion-icon name="time-outline" aria-hidden="true"></ion-icon>
-                                    <select name="Time" class="input-field">
-                                        <option value="08:00am">08 : 00 am</option>
-                                        <option value="09:00am">09 : 00 am</option>
-                                        <option value="010:00am">10 : 00 am</option>
-                                        <option value="011:00am">11 : 00 am</option>
-                                        <option value="012:00am">12 : 00 am</option>
-                                        <option value="01:00pm">01 : 00 pm</option>
-                                        <option value="02:00pm">02 : 00 pm</option>
-                                        <option value="03:00pm">03 : 00 pm</option>
-                                        <option value="04:00pm">04 : 00 pm</option>
-                                        <option value="05:00pm">05 : 00 pm</option>
-                                        <option value="06:00pm">06 : 00 pm</option>
-                                        <option value="07:00pm">07 : 00 pm</option>
-                                        <option value="08:00pm">08 : 00 pm</option>
-                                        <option value="09:00pm">09 : 00 pm</option>
-                                        <option value="10:00pm">10 : 00 pm</option>
+                                    <select name="Time" id="reservation-time" class="input-field" disabled>
+                                        @foreach (var time in ViewBag.AvailableTime)
+                                        {
+                                            <option value="@time">@time</option>
+                                        }
+                                    </select>
+                                    <ion-icon name="chevron-down" aria-hidden="true"></ion-icon>
+                                </div>
+
+                                <div class="icon-wrapper">
+                                    <ion-icon name="people-outline" aria-hidden="true"></ion-icon>
+                                    <select name="TableId" id="reservation-table" class="input-field" disabled>
+                                        @foreach (var table in ViewBag.AvailableTables)
+                                        {
+                                            <option value="@table">Table @table</option>
+                                        }
                                     </select>
                                     <ion-icon name="chevron-down" aria-hidden="true"></ion-icon>
                                 </div>
                             </div>
                             <textarea name="Message" placeholder="Message" autocomplete="off" class="input-field"></textarea>
-                          
+
                             <input type="hidden" name="TableId" value="1">
                             <input type="hidden" name="UserId" value="1">
 
@@ -242,15 +241,79 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
 
     <script>
-        function showMessage(message, isSuccess) {
-            if (isSuccess) {
-                toastr.success(message);
-            } else {
-                toastr.error(message);
-            }
-        }
-
         $(document).ready(function () {
+            $('#reservation-date').change(function () {
+                var selectedDate = $(this).val();
+                if (selectedDate) {
+                    $('#reservation-time').prop('disabled', false);
+                    $('#reservation-table').prop('disabled', false);
+                    updateAvailableTimes(selectedDate, $('#reservation-table').val());
+                    updateAvailableTables(selectedDate, $('#reservation-time').val());
+                }
+            });
+
+            $('#reservation-time').change(function () {
+                var selectedTime = $(this).val();
+                var selectedDate = $('#reservation-date').val();
+                if (selectedDate && selectedTime) {
+                    updateAvailableTables(selectedDate, selectedTime);
+                }
+            });
+
+            $('#reservation-table').change(function () {
+                var selectedDate = $('#reservation-date').val();
+                var selectedTable = $(this).val();
+                if (selectedDate && selectedTable) {
+                    updateAvailableTimes(selectedDate, selectedTable);
+                }
+            });
+
+            function updateAvailableTimes(reservationDate, tableId) {
+                $.ajax({
+                    url: "/Reservation/GetAvailableTimes",
+                    method: "GET",
+                    data: { reservationDate: reservationDate, tableId: tableId },
+                    success: function (availableTimes) {
+                        var currentTime = $('#reservation-time').val();
+                        $('#reservation-time').empty();
+                        $.each(availableTimes, function (index, time) {
+                            var option = $('<option>', {
+                                value: time,
+                                text: time
+                            });
+                            $('#reservation-time').append(option);
+                        });
+                        $('#reservation-time').val(currentTime);
+                    },
+                    error: function (error) {
+                        console.error('Error retrieving available times:', error);
+                    }
+                });
+            }
+
+            function updateAvailableTables(selectedDate, selectedTime) {
+                $.ajax({
+                    url: "/Reservation/GetAvailableTables",
+                    method: "GET",
+                    data: { reservationDate: selectedDate, time: selectedTime },
+                    success: function (availableTables) {
+                        var currentTable = $('#reservation-table').val();
+                        $('#reservation-table').empty();
+                        $.each(availableTables, function (index, table) {
+                            var option = $('<option>', {
+                                value: table,
+                                text: 'Table ' + table
+                            });
+                            $('#reservation-table').append(option);
+                        });
+                        $('#reservation-table').val(currentTable);
+                    },
+                    error: function (error) {
+                        console.error('Error retrieving available tables:', error);
+                    }
+                });
+            }
+
             $('#reservation-form').submit(function (e) {
                 e.preventDefault();
 
@@ -260,7 +323,7 @@
                     ReservationDate: $('input[name="ReservationDate"]').val(),
                     Time: $('select[name="Time"]').val(),
                     Message: $('textarea[name="Message"]').val(),
-                    TableId: $('input[name="TableId"]').val(),
+                    TableId: $('select[name="TableId"]').val(), // Get value from the select element
                     UserId: $('input[name="UserId"]').val()
                 };
 
@@ -281,7 +344,17 @@
                     }
                 });
             });
+
+            function showMessage(message, isSuccess) {
+                if (isSuccess) {
+                    toastr.success(message);
+                } else {
+                    toastr.error(message);
+                }
+            }
         });
     </script>
+
+
 </body>
 </html>

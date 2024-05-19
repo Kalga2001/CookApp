@@ -10,11 +10,12 @@ namespace CookApp.API.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly IAccountService _userService;
-
-        public HomeController(ILogger<HomeController> logger, IAccountService userService)
+        private readonly IReservationService _reservationService;
+        public HomeController(ILogger<HomeController> logger, IAccountService userService, IReservationService reservationService)
         {
             _logger = logger;
             _userService = userService;
+            _reservationService = reservationService;
         }
 
         public IActionResult Index()
@@ -37,12 +38,7 @@ namespace CookApp.API.Controllers
         {
             return View();
         }
-
-        public IActionResult Reservation()
-        {
-            return View();
-        }
-
+ 
         public IActionResult Services()
         {
             return View();

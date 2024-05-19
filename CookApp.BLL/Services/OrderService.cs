@@ -1,5 +1,4 @@
-﻿using CookApp.BLL.Dtos.CartItemDto;
-using CookApp.BLL.Dtos.OrderDto;
+﻿using CookApp.BLL.Dtos.OrderDto;
 using CookApp.BLL.IServices;
 using CookApp.DAL.IRepository;
 using CookApp.Entity.Entity;
