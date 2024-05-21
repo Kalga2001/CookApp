@@ -15,5 +15,6 @@ namespace CookApp.BLL.IServices
         Task<Cart> GetCartByIdAsync(int cartId);
         Task<int> CreateCartAsync();
         Task AddCartItemToCartAsync(int cartId, CartItem cartItem);
+        Task CloseCurrentCart();
     }
 }

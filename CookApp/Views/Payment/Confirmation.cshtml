@@ -1,0 +1,32 @@
+﻿
+<div class="confirmation-page">
+    <p>Thank you for your payment!</p>
+    <p>Your order has been successfully processed.</p>
+    <button type="button" class="btn btn-primary" onclick="location.href='@Url.Action("Index", "Home")'">Go to Home</button>
+</div>
+
+<style>
+    .confirmation-page {
+        text-align: center;
+        margin-top: 50px;
+    }
+
+        .confirmation-page p {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+
+    .btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+        color: white;
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #004085;
+        }
+</style>

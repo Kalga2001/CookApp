@@ -1,0 +1,192 @@
+﻿@{
+    ViewData["Title"] = "Payment";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .payment-container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .payment-option {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+            .payment-option:hover {
+                background-color: #f0f0f0;
+            }
+
+            .payment-option input {
+                margin-right: 10px;
+            }
+
+        .payment-form {
+            display: none;
+            margin-top: 20px;
+        }
+
+            .payment-form.active {
+                display: block;
+            }
+
+        .input-wrapper {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+            .input-wrapper label {
+                display: block;
+                margin-bottom: 5px;
+                font-weight: bold;
+            }
+
+        .input-field {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+            .btn:hover {
+                background-color: #0056b3;
+            }
+
+        .headline-1 {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="payment-container">
+            <h2 class="headline-1">Select Payment Method</h2>
+
+            <div class="payment-option" id="pay-by-cash">
+                <input type="radio" name="paymentMethod" value="cash">
+                <label>Payment by Cash</label>
+            </div>
+
+            <div class="payment-option" id="pay-by-card">
+                <input type="radio" name="paymentMethod" value="card">
+                <label>Payment by Card</label>
+            </div>
+
+            <div class="payment-form" id="card-form">
+                <form id="payment-form" action="/Payment/ProcessPayment" method="post" onsubmit="return validateCardForm()">
+                    <h3>Enter Card Details</h3>
+                    <div class="input-wrapper">
+                        <label for="cardNumber">Card Number:</label>
+                        <input type="text" id="cardNumber" name="CardNumber" required class="input-field" maxlength="19">
+                    </div>
+                    <div class="input-wrapper">
+                        <label for="cardExpiry">Expiration Date:</label>
+                        <input type="text" id="cardExpiry" name="CardExpiry" placeholder="MM/YY" required class="input-field" maxlength="5">
+                    </div>
+                    <div class="input-wrapper">
+                        <label for="cardCVC">CVC:</label>
+                        <input type="text" id="cardCVC" name="CardCVC" required class="input-field" maxlength="3">
+                    </div>
+                    <button type="submit" class="btn">Pay Now</button>
+                </form>
+            </div>
+
+            <div class="payment-form" id="cash-form">
+                <form id="cash-payment-form" action="/Payment/ProcessCashPayment" method="post">
+                    <h3>Cash Payment Confirmation</h3>
+                    <p>You have selected payment by cash. Please confirm your order.</p>
+                    <button type="submit" class="btn">Confirm</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('input[name="paymentMethod"]').change(function () {
+                if ($(this).val() === 'card') {
+                    $('#card-form').addClass('active');
+                    $('#cash-form').removeClass('active');
+                } else if ($(this).val() === 'cash') {
+                    $('#cash-form').addClass('active');
+                    $('#card-form').removeClass('active');
+                }
+            });
+
+            $('#cardNumber').on('input', function () {
+                this.value = this.value.replace(/\D/g, '').replace(/(\d{4})(?=\d)/g, '$1 ');
+            });
+
+            $('#cardExpiry').on('input', function () {
+                this.value = this.value.replace(/\D/g, '').replace(/(\d{2})(?=\d)/g, '$1/').substring(0, 5);
+            });
+
+            $('#cardCVC').on('input', function () {
+                this.value = this.value.replace(/\D/g, '').substring(0, 3);
+            });
+        });
+
+        function validateCardForm() {
+            const cardNumber = $('#cardNumber').val().replace(/\s+/g, '');
+            const cardExpiry = $('#cardExpiry').val();
+            const cardCVC = $('#cardCVC').val();
+
+            if (cardNumber.length !== 16) {
+                alert('Card number must be 16 digits.');
+                return false;
+            }
+
+            if (!/^\d{2}\/\d{2}$/.test(cardExpiry)) {
+                alert('Expiration date must be in MM/YY format.');
+                return false;
+            }
+
+            if (cardCVC.length !== 3) {
+                alert('CVC must be 3 digits.');
+                return false;
+            }
+
+            return true;
+        }
+    </script>
+</body>
+</html>
+
+

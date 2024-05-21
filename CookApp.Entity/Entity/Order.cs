@@ -13,7 +13,7 @@ namespace CookApp.Entity.Entity
         public decimal TotalAmount { get; set; }
         public PaymentStatus PaymentStatus { get; set; }
         public OrderStatus OrderStatus { get; set; }
-        public int TableId { get; set; }
+        public int? TableId { get; set; }
         public Table Table { get; set; }
         public int? CartId { get; set; }
         public Cart? Cart { get; set; }

@@ -123,7 +123,7 @@ namespace CookApp.DAL.Migrations
                     b.Property<int>("PaymentStatus")
                         .HasColumnType("int");
 
-                    b.Property<int>("TableId")
+                    b.Property<int?>("TableId")
                         .HasColumnType("int");
 
                     b.Property<decimal>("TotalAmount")
@@ -458,9 +458,7 @@ namespace CookApp.DAL.Migrations
 
                     b.HasOne("CookApp.Entity.Entity.Table", "Table")
                         .WithMany()
-                        .HasForeignKey("TableId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("TableId");
 
                     b.Navigation("Cart");
 

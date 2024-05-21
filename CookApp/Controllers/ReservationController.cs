@@ -8,10 +8,11 @@ namespace CookApp.API.Controllers
     public class ReservationController : Controller
     {
         private readonly IReservationService _reservationService;
-
-        public ReservationController(IReservationService reservationService)
+        private readonly IOrderService _orderService;
+        public ReservationController(IReservationService reservationService, IOrderService orderService)
         {
             _reservationService = reservationService;
+            _orderService = orderService;
         }
 
         [HttpGet]
@@ -52,7 +53,10 @@ namespace CookApp.API.Controllers
                 var isSuccess = await _reservationService.MakeReservation(reservationDto);
                 if (isSuccess)
                 {
-                    return RedirectToAction("Index", "Home");
+                    var order = await _orderService.CurrentOrder();
+                    order.TableId = reservationDto.TableId;
+                    await _orderService.UpdateOrder(order.Id, order);
+                    return RedirectToAction("Payment", "Payment");
                 }
                 else
                 {

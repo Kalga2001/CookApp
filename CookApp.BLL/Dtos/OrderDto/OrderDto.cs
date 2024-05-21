@@ -16,6 +16,6 @@ namespace CookApp.BLL.Dtos.OrderDto
         public PaymentStatus PaymentStatus { get; set; }
         public OrderStatus OrderStatus { get; set; }
         public int? CartId { get; set; }
-        public int TableId { get; set; }
+        public int? TableId { get; set; }
     }
 }

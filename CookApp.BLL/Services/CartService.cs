@@ -85,6 +85,13 @@ namespace CookApp.BLL.Services
             await _cartRepository.Update(cart);
         }
 
+        public async Task CloseCurrentCart()
+        {
+            int currentCartId = await GetAvailableCart();
+            var cart = await GetCartByIdAsync(currentCartId);
+            cart.CartState = Entity.Enums.CartState.Finish;
+            await _cartRepository.Update(cart);
+        }
     }
 
 }

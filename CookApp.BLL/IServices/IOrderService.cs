@@ -13,7 +13,8 @@ namespace CookApp.BLL.IServices
         Task<IQueryable<OrderDto>> GetOrders();
         Task<OrderDto> GetOrder(int orderId);
         Task AddOrder(OrderDto orderDto);
-        Task UpdateOrder(int orderId , OrderDto orderDto);
+        Task UpdateOrder(int orderId , Order order);
         Task DeleteOrder(int orderId);
+        Task<Order> CurrentOrder();
     }
 }

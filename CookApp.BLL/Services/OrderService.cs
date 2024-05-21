@@ -76,7 +76,7 @@ namespace CookApp.BLL.Services
             });
         }
 
-        public async Task UpdateOrder(int orderId, OrderDto orderDto)
+        public async Task UpdateOrder(int orderId, Order orderDto)
         {
             Order existingOrder = await _orderRepository.GetByIdAsync(orderId);
 
@@ -88,6 +88,12 @@ namespace CookApp.BLL.Services
 
             await _orderRepository.Update(existingOrder);
 
+        }
+
+        public async Task<Order> CurrentOrder()
+        {
+            var currentOrder = _orderRepository.GetAllAsyncQuery().FirstOrDefault(x => x.OrderStatus == Entity.Enums.OrderStatus.InProgress);
+            return currentOrder;
         }
     }
 
