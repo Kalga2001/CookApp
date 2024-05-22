@@ -90,6 +90,18 @@ namespace CookApp.BLL.Services
             await _userRepository.AddAsync(user);
         }
 
-
+        public async Task ResetPassword(ForgotPasswordDto forgotPasswordDto)
+        {
+            var user = _userRepository.GetAllAsyncQuery().FirstOrDefault(x => x.Email == forgotPasswordDto.Email);
+            
+            if(user != null)
+            {
+                if(forgotPasswordDto.NewPassword == forgotPasswordDto.ConfirmPassword)
+                {
+                    user.Password = forgotPasswordDto.NewPassword;
+                   await _userRepository.Update(user);
+                }
+            }
+        }
     }
 }

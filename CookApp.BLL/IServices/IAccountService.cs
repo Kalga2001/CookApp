@@ -12,6 +12,7 @@ namespace CookApp.BLL.IServices
     {
         Task<User> Login(LoginDto loginDto);
         Task Registration(RegistrationDto registrationDto);
+        Task ResetPassword(ForgotPasswordDto forgotPasswordDto);
         IQueryable<string> GetRolesByUserID(int UserId);
     }
 }

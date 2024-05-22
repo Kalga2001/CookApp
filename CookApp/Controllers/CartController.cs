@@ -10,6 +10,7 @@ namespace CookApp.API.Controllers
         {
             _cartService = cartService; 
         }
+        [CustomAuthorize("Client")]
         public async Task<IActionResult> Index()
         {
             var cartItems = await _cartService.GetCart();

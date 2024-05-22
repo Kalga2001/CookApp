@@ -45,6 +45,12 @@ namespace CookApp.API.Controllers
 
             var token = _tokenService.CreateToken(user);
 
+            HttpContext.Response.Cookies.Append("accessToken", token, new CookieOptions
+            {
+                HttpOnly = true,
+                Expires = DateTime.UtcNow.AddMinutes(120) 
+            });
+
             var roles = _accountService.GetRolesByUserID(user.Id);
 
             if (roles.Contains("Administrator"))
@@ -83,6 +89,28 @@ namespace CookApp.API.Controllers
                 return View(registration);
             }
         }
-    }
 
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult ForgotPassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordDto forgotPasswordDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(forgotPasswordDto);
+            }
+
+            await _accountService.ResetPassword(forgotPasswordDto);
+
+            return RedirectToAction("Login");
+        }
+    }
 }
+
+

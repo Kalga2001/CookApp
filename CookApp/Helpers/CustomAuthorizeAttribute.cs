@@ -1,5 +1,4 @@
-﻿using CookApp.Entity.Enums;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System;
 using System.IdentityModel.Tokens.Jwt;
@@ -18,42 +17,25 @@ public class CustomAuthorizeAttribute : Attribute, IAuthorizationFilter
 
     public void OnAuthorization(AuthorizationFilterContext filterContext)
     {
-        string refererHeader = filterContext.HttpContext.Request.Headers["Referer"];
-        string url = null;
+        string token = filterContext.HttpContext.Request.Cookies["accessToken"];
 
-        if (refererHeader.Contains("Home"))
+        if (string.IsNullOrEmpty(token))
         {
-            refererHeader = refererHeader.Replace("Home", "");
+            filterContext.Result = new UnauthorizedResult();
+            return;
         }
 
-        if (!refererHeader.Contains("token="))
-        {
-            if (!refererHeader.Contains("Account/Login"))
-            {
-                url = refererHeader + "Account/Login";
-            }
-            else
-            {
-                url = refererHeader;
-            }
-        }
-
- 
         try
         {
-            int tokenIndex = refererHeader.IndexOf("token=");
-            string token = refererHeader.Substring(tokenIndex + 6);
-
-
             var tokenHandler = new JwtSecurityTokenHandler();
-            var jwtToken = tokenHandler.ReadJwtToken(token);
+            var jwtToken = tokenHandler.ReadToken(token) as JwtSecurityToken;
 
-
-            var rolesClaim = jwtToken.Claims.FirstOrDefault(c => c.Type == "http://schemas.microsoft.com/ws/2008/06/identity/claims/role");
+            var rolesClaim = jwtToken.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role);
             if (rolesClaim == null)
             {
                 throw new InvalidOperationException("Role claim not found in token.");
             }
+
             string[] roles = rolesClaim.Value.Split(',');
 
             if (!roles.Intersect(allowedRoles).Any())
@@ -64,16 +46,16 @@ public class CustomAuthorizeAttribute : Attribute, IAuthorizationFilter
 
             if (roles.Contains("Administrator"))
             {
-                url = refererHeader + "Admin/Index";
+                // Redirect to Admin page
+                filterContext.Result = new RedirectResult("~/Admin/Index");
+                return;
             }
         }
         catch (Exception ex)
         {
-            filterContext.Result = new RedirectResult(url); 
-            
+            filterContext.Result = new UnauthorizedResult();
             return;
         }
-
     }
 }
 
