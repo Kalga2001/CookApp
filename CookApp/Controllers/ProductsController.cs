@@ -115,7 +115,6 @@ namespace CookApp.API.Controllers
         {
             try
             {
-                // Call the UpdateProduct method passing the provided productDto
                 await _productService.UpdateProduct(productDto.ProductId, productDto);
                 return Ok("Product updated successfully.");
             }

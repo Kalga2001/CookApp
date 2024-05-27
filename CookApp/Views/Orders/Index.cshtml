@@ -1,0 +1,285 @@
+﻿@using CookApp.BLL.Dtos.OrderDto
+@model IEnumerable<OrderDto>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order List</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            display: flex;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: 250px;
+            background-color: #333;
+            color: white;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+            .sidebar a {
+                display: block;
+                color: white;
+                text-decoration: none;
+                padding: 10px 0;
+            }
+
+                .sidebar a:hover {
+                    background-color: #555;
+                }
+
+        .content {
+            margin-left: 250px;
+            flex: 1;
+            padding: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .rounded-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: none;
+            background-color: #65a66f;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+            .rounded-btn:hover {
+                background-color: #65a66f;
+            }
+
+        .table-container {
+            width: 85%;
+            margin-top: 20px;
+            margin-left: calc(230px + 15px);
+            background-color: #f9f9f9;
+            border-radius: 8px;
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="logo">
+            <a href="/Home">
+                <img src="/images/logo.svg" alt="Grilli - Home">
+            </a>
+        </div>
+        @Html.ActionLink("Home", "Index", "Admin", null, new { @class = "nav-link text-white" })
+        @Html.ActionLink("Manage Users", "Index", "ManageUsers", null, new { @class = "nav-link text-white" })
+        @Html.ActionLink("Manage Roles", "Index", "ManageRoles", null, new { @class = "nav-link text-white" })
+        @Html.ActionLink("Products", "Index", "Products", null, new { @class = "nav-link text-white" })
+        @Html.ActionLink("Orders", "Index", "Orders", null, new { @class = "nav-link text-white" })
+    </div>
+    <div class="table-container">
+
+        @if (Model != null && Model.Any())
+        {
+            <div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Cart ID</th>
+                            <th>Table ID</th>
+                            <th>Total Amount</th>
+                            <th>Payment Status</th>
+                            <th>Order Status</th>
+                            <th>Order Date</th>
+                            <th>Edit</th>
+                            <th>Delete</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var order in Model)
+                        {
+                            <tr>
+                                <td>@order.OrderId</td>
+                                <td>@order.CartId</td>
+                                <td>@order.TableId</td>
+                                <td>@order.TotalAmount</td>
+                                <td>@order.PaymentStatus</td>
+                                <td>@order.OrderStatus</td>
+                                <td>@order.OrderDate.ToShortDateString()</td>
+                                <td>
+                                    <button type="button" class="btn btn-primary" onclick="openEditOrderModal('@order.OrderId', '@order.TotalAmount', '@order.PaymentStatus', '@order.TableId')">Edit</button>
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-danger" onclick="openDeleteOrderModal('@order.OrderId')">Delete</button>
+                                </td>
+                            </tr>
+
+                            <div class="modal fade" id="editOrderModal" tabindex="-1" role="dialog" aria-labelledby="editOrderModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="editOrderModalLabel">Edit Order</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="closeEditOrderModal()">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form id="editOrderForm">
+                                                <div class="form-group">
+                                                    <label for="editOrderId">Order ID</label>
+                                                    <input type="text" class="form-control" id="editOrderId" readonly>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="editTotalAmount">Total Amount</label>
+                                                    <input type="text" class="form-control" id="editTotalAmount">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="editPaymentStatus">Payment Status</label>
+                                                    <select class="form-control" id="editPaymentStatus">
+                                                        <option value="NoPayment">No Payment</option>
+                                                        <option value="PaymentAtRestaurant">Payment at Restaurant</option>
+                                                        <option value="PaymentByCard">Payment by Card</option>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="editTableId">Table ID</label>
+                                                    <select class="form-control" id="editTableId">
+                                                    </select>
+                                                </div>
+                                            </form>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="closeEditOrderModal()">Close</button>
+                                            <button type="button" class="btn btn-primary" onclick="saveEditedOrder()">Save changes</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <!-- Modal dialog for Delete Order -->
+                            <div class="modal fade" id="deleteOrderModal" tabindex="-1" role="dialog" aria-labelledby="deleteOrderModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="deleteOrderModalLabel">Delete Order</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="closeDeleteOrderModal()">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p>Are you sure you want to delete this order?</p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="closeDeleteOrderModal()">Close</button>
+                                            <button type="button" class="btn btn-danger" onclick="deleteOrder(@order.OrderId)">Delete</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <p>No orders found.</p>
+        }
+        <script>
+
+
+            function closeEditOrderModal() {
+                $('#editOrderModal').modal('hide');
+            }
+
+            function openDeleteOrderModal(orderId) {
+                $('#deleteOrderModal').modal('show');
+                $('#deleteOrderBtn').attr('onclick', `deleteOrder(${orderId})`); // Set the onclick attribute dynamically
+            }
+
+            function closeDeleteOrderModal() {
+                $('#deleteOrderModal').modal('hide');
+            }
+
+            function deleteOrder(orderId) {
+                $.ajax({
+                    url: '/Orders/DeleteOrder',
+                    type: 'POST',
+                    data: { orderId: orderId }, // Send the orderId as data
+                    success: function (response) {
+                        $('#deleteOrderModal').modal('hide');
+                        window.location.reload();
+                    },
+                    error: function (error) {
+                        console.error('Error:', error);
+                    }
+                });
+            }
+            function openEditOrderModal(orderId, totalAmount, paymentStatus, tableId) {
+                $('#editOrderModal').modal('show');
+                $('#editOrderId').val(orderId);
+                $('#editTotalAmount').val(totalAmount);
+                $('#editPaymentStatus').val(paymentStatus);
+                $.ajax({
+                    url: '/Orders/GetTables',
+                    type: 'GET',
+                    success: function (data) {
+                        var options = '';
+                        data.forEach(function (tableId) {
+                            options += '<option value="' + tableId + '">' + tableId + '</option>';
+                        });
+                        $('#editTableId').html(options);
+                        $('#editTableId').val(tableId);
+                    },
+                    error: function (error) {
+                        console.error('Error:', error);
+                    }
+                });
+            }
+            function saveEditedOrder() {
+                var formData = new FormData();
+                formData.append('orderId', $('#editOrderId').val());
+                formData.append('totalAmount', $('#editTotalAmount').val());
+                formData.append('paymentStatus', $('#editPaymentStatus').val());
+                formData.append('tableId', $('#editTableId').val());
+
+                $.ajax({
+                    url: '/Orders/UpdateOrder',
+                    type: 'POST',
+                    processData: false,
+                    contentType: false,
+                    data: formData,
+                    success: function (response) {
+                        $('#editOrderModal').modal('hide');
+                        window.location.reload();
+                    },
+                    error: function (error) {
+                        console.error('Error:', error);
+                    }
+                });
+            }
+
+        </script>
+</body>
+</html>

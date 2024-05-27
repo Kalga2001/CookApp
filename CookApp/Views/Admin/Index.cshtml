@@ -9,19 +9,22 @@
     <title>@ViewData["Title"]</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
-        .container {
+        body {
             display: flex;
-            flex-direction: column;
-            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
         }
 
         .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: 250px;
             background-color: #333;
             color: white;
             padding: 20px;
-            width: 250px;
-            /* Смещение влево */
-            margin-left: -20px;
+            box-sizing: border-box;
         }
 
             .sidebar a {
@@ -36,6 +39,7 @@
                 }
 
         .content {
+            margin-left: 250px;
             flex: 1;
             padding: 20px;
         }
@@ -57,15 +61,21 @@
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="sidebar">
-            @Html.ActionLink("Home", "Index", "Admin", null, new { @class = "nav-link text-white" })
-            @Html.ActionLink("Manage Users", "Index", "ManageUsers", null, new { @class = "nav-link text-white" })
-            @Html.ActionLink("Manage Roles", "Index", "ManageRoles", null, new { @class = "nav-link text-white" })
-            @Html.ActionLink("Products", "Index", "Products", null, new { @class = "nav-link text-white" })
+    <div class="sidebar">
+        <div class="logo">
+            <a href="/Home">
+                <img src="/images/logo.svg" alt="Grilli - Home">
+            </a>
         </div>
-        <div class="content">
-        </div>
+        @Html.ActionLink("Home", "Index", "Admin", null, new { @class = "nav-link text-white" })
+        @Html.ActionLink("Manage Users", "Index", "ManageUsers", null, new { @class = "nav-link text-white" })
+        @Html.ActionLink("Manage Roles", "Index", "ManageRoles", null, new { @class = "nav-link text-white" })
+        @Html.ActionLink("Products", "Index", "Products", null, new { @class = "nav-link text-white" })
+        @Html.ActionLink("Orders", "Index", "Orders", null, new { @class = "nav-link text-white" })
+    </div>
+    <div class="content">
+        <h1>@ViewData["Title"]</h1>
+    
     </div>
 </body>
 </html>

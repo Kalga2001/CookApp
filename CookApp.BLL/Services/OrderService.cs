@@ -61,6 +61,11 @@ namespace CookApp.BLL.Services
             return null;
         }
 
+        public async Task<Order> GetOrderEntity(int orderId)
+        {
+            return await _orderRepository.GetByIdAsync(orderId);         
+        }
+
         public async Task<IQueryable<OrderDto>> GetOrders()
         {
             IQueryable<Order> orders = _orderRepository.GetAllAsyncQuery();
@@ -80,10 +85,9 @@ namespace CookApp.BLL.Services
         {
             Order existingOrder = await _orderRepository.GetByIdAsync(orderId);
 
-            existingOrder.OrderDate = orderDto.OrderDate;
+            existingOrder.OrderDate = DateTime.Now;
             existingOrder.TotalAmount = orderDto.TotalAmount;
             existingOrder.PaymentStatus = orderDto.PaymentStatus;
-            existingOrder.OrderStatus = orderDto.OrderStatus;
             existingOrder.TableId = orderDto.TableId;
 
             await _orderRepository.Update(existingOrder);
