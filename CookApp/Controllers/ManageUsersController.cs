@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CookApp.API.Controllers
 {
+    [CustomAuthorize("Administrator")]
     public class ManageUsersController : Controller
     {
         private readonly IUserService _userService;

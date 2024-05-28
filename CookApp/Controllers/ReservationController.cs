@@ -17,6 +17,7 @@ namespace CookApp.API.Controllers
         }
 
         [HttpGet]
+        [CustomAuthorize("Administrator", "Client")]
         public async Task<IActionResult> Index()
         {
             DateTime currentDate = DateTime.Today;
@@ -29,8 +30,9 @@ namespace CookApp.API.Controllers
 
             return View();
         }
-
+   
         [HttpPost]
+        [CustomAuthorize("Administrator", "Client")]
         public async Task<IActionResult> MakeReservation()
         {
             using (StreamReader reader = new StreamReader(Request.Body))
@@ -65,6 +67,7 @@ namespace CookApp.API.Controllers
         }
 
         [HttpGet]
+        [CustomAuthorize("Administrator", "Client")]
         public async Task<IActionResult> GetAvailableTimes(DateTime reservationDate, int? tableId)
         {
             var availableTime = await _reservationService.GetAvailableTimes(reservationDate, tableId);
@@ -74,6 +77,7 @@ namespace CookApp.API.Controllers
         }
 
         [HttpGet]
+        [CustomAuthorize("Administrator", "Client")]
         public async Task<IActionResult> GetAvailableTables(DateTime? reservationDate, string time)
         {
             var availableTables = await _reservationService.GetAvailableTables(reservationDate, time);
@@ -82,6 +86,7 @@ namespace CookApp.API.Controllers
             return Ok(availableTables);
         }
 
+        [CustomAuthorize("Administrator")]
         public async Task<IActionResult> Reservations()
         {
             var reservations = await _reservationService.GetReservations().ToListAsync();
@@ -96,6 +101,7 @@ namespace CookApp.API.Controllers
         }
 
         [HttpPost]
+        [CustomAuthorize("Administrator")]
         public async Task UpdateReservation()
         {
             using (StreamReader reader = new StreamReader(Request.Body))
@@ -120,6 +126,7 @@ namespace CookApp.API.Controllers
         }
 
         [HttpPost]
+        [CustomAuthorize("Administrator")]
         public async Task DeleteReservation(int reservationId)
         {
            await _reservationService.DeleteReservation(reservationId);

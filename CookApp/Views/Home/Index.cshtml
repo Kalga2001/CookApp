@@ -1,4 +1,8 @@
-﻿<!DOCTYPE html>
+﻿@{
+    var accessToken = Context.Request.Cookies["accessToken"];
+}
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -90,14 +94,6 @@
 
             <div class="separator"></div>
 
-            <a href="mailto:booking@restaurant.com" class="topbar-item link">
-                <div class="icon">
-                    <ion-icon name="mail-outline" aria-hidden="true"></ion-icon>
-                </div>
-
-                <span class="span">booking@restaurant.com</span>
-            </a>
- 
         </div>
     </div>
 
@@ -159,7 +155,7 @@
                             <div class="separator"></div>
                             <span class="span">SpecialDish</span>
                         </a>
-                    </li>            
+                    </li>
                 </ul>
 
                 <div class="text-center">
@@ -177,13 +173,24 @@
 
             </nav>
 
-            <a href="~/Account/Login" class="btn btn-primary small-btn">
-                <span class="text text-1">Login</span>
-            </a>
+            @if (string.IsNullOrEmpty(accessToken))
+            {
+                <a href="~/Account/Login" class="btn btn-primary small-btn">
+                    <span class="text text-1">Login</span>
+                </a>
 
-            <a href="~/Account/Registration" class="btn btn-success small-btn">
-                <span class="text text-1">Registration</span>
-            </a>
+                <a href="~/Account/Registration" class="btn btn-success small-btn">
+                    <span class="text text-1">Registration</span>
+                </a>
+            }
+            else
+            {
+
+                <button type="submit" class="btn btn-danger small-btn" onclick="logout()">
+                    <span class="text text-1">Logout</span>
+                </button>
+
+            }
 
             <button class="nav-open-btn" aria-label="open menu" data-nav-toggler>
                 <span class="line line-1"></span>
@@ -228,7 +235,7 @@
                         <p class="body-2 hero-text slider-reveal">
                             Come with family & feel the joy of mouthwatering food
                         </p>
- 
+
 
                     </li>
 
@@ -249,7 +256,7 @@
                             Come with family & feel the joy of mouthwatering food
                         </p>
 
-                       
+
 
                     </li>
 
@@ -270,7 +277,7 @@
                             Come with family & feel the joy of mouthwatering food
                         </p>
 
- 
+
                     </li>
 
                 </ul>
@@ -283,7 +290,7 @@
                     <ion-icon name="chevron-forward"></ion-icon>
                 </button>
 
-                <a href="#" class="hero-btn has-after">
+                <a href="" class="hero-btn has-after">
                     <img src="./images/hero-icon.png" width="48" height="48" alt="booking icon">
 
                     <span class="label-2 text-center span">Book A Table</span>
@@ -310,15 +317,13 @@
 
                 <div class="footer-brand has-before has-after">
 
-                    <a href="#" class="logo">
+                    <a href="" class="logo">
                         <img src="./images/logo.svg" width="160" height="50" loading="lazy" alt="grilli home">
                     </a>
 
                     <address class="body-4">
                         Restaurant St, Delicious City, London 9578, UK
                     </address>
-
-                    <a href="mailto:booking@grilli.com" class="body-4 contact-link">booking@grilli.com</a>
 
                     <a href="tel:+88123123456" class="body-4 contact-link">Booking Request : +88-123-123456</a>
 
@@ -357,23 +362,23 @@
                 <ul class="footer-list">
 
                     <li>
-                        <a href="#" class="label-2 footer-link hover-underline">Home</a>
+                        <a href="" class="label-2 footer-link hover-underline">Home</a>
                     </li>
 
                     <li>
-                        <a href="#" class="label-2 footer-link hover-underline">Menus</a>
+                        <a href="" class="label-2 footer-link hover-underline">Menus</a>
                     </li>
 
                     <li>
-                        <a href="#" class="label-2 footer-link hover-underline">About Us</a>
+                        <a href="" class="label-2 footer-link hover-underline">About Us</a>
                     </li>
 
                     <li>
-                        <a href="#" class="label-2 footer-link hover-underline">Our Chefs</a>
+                        <a href="" class="label-2 footer-link hover-underline">Our Chefs</a>
                     </li>
 
                     <li>
-                        <a href="#" class="label-2 footer-link hover-underline">Contact</a>
+                        <a href="" class="label-2 footer-link hover-underline">Contact</a>
                     </li>
 
                 </ul>
@@ -381,23 +386,23 @@
                 <ul class="footer-list">
 
                     <li>
-                        <a href="#" class="label-2 footer-link hover-underline">Facebook</a>
+                        <a href="" class="label-2 footer-link hover-underline">Facebook</a>
                     </li>
 
                     <li>
-                        <a href="#" class="label-2 footer-link hover-underline">Instagram</a>
+                        <a href="" class="label-2 footer-link hover-underline">Instagram</a>
                     </li>
 
                     <li>
-                        <a href="#" class="label-2 footer-link hover-underline">Twitter</a>
+                        <a href="" class="label-2 footer-link hover-underline">Twitter</a>
                     </li>
 
                     <li>
-                        <a href="#" class="label-2 footer-link hover-underline">Youtube</a>
+                        <a href="" class="label-2 footer-link hover-underline">Youtube</a>
                     </li>
 
                     <li>
-                        <a href="#" class="label-2 footer-link hover-underline">Google Map</a>
+                        <a href="" class="label-2 footer-link hover-underline">Google Map</a>
                     </li>
 
                 </ul>
@@ -435,7 +440,19 @@
     <script src="~/js/script.min.js"></script>
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
- 
-
-</body> 
+    <script>
+        function logout() {
+            $.ajax({
+                url: '/Account/Logout',
+                method: 'POST',
+                success: function (response) {
+                    window.location.href = "/Home";
+                },
+                error: function (xhr, status, error) {
+                    console.error(error);
+                }
+            });
+        }
+    </script>
+</body>
 </html>

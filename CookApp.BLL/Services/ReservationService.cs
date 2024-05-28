@@ -38,7 +38,8 @@ namespace CookApp.BLL.Services
                 BeginTime = reservationDto.Time,
                 EndTime = reservationDto.Time.Add(TimeSpan.FromHours(2)),
                 NumberOfPeople = reservationDto.NumberOfPeople,
-                Message = reservationDto.Message
+                Message = reservationDto.Message,
+                Name = reservationDto.Name
             };
 
             var added = await _reservationRepository.AddAsync(reservation);

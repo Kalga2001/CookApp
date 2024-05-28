@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CookApp.API.Controllers
 {
+    [CustomAuthorize("Administrator")]
     public class AdminController : Controller
     {
         private readonly IUserService _userService;
@@ -13,7 +14,7 @@ namespace CookApp.API.Controllers
         {
             _userService = userService;
         }
-
+        [HttpGet]
         public IActionResult Index()
         {
             return View();

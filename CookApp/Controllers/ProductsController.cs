@@ -13,6 +13,7 @@ using CookApp.API.Extension;
 
 namespace CookApp.API.Controllers
 {
+    [CustomAuthorize("Administrator")]
     public class ProductsController : Controller
     {
         private readonly IImageService _imageService;

@@ -1,4 +1,5 @@
 ﻿using CookApp.BLL.Dtos.CartDto;
+using CookApp.BLL.Dtos.OrderDto;
 using CookApp.BLL.IServices;
 using CookApp.DAL.IRepository;
 using CookApp.Entity.Entity;
@@ -26,9 +27,7 @@ namespace CookApp.BLL.Services
         {
             var inProgressCart = await _cartRepository.GetAllAsyncQuery().FirstOrDefaultAsync(x => x.CartState == Entity.Enums.CartState.InProgress);
 
-            int cartId = inProgressCart.Id;
-
-            return cartId;
+            return inProgressCart?.Id ?? 0;
         }
 
         public async Task<IQueryable<CartDto>> GetCart()
@@ -85,6 +84,7 @@ namespace CookApp.BLL.Services
 
     
             await _cartRepository.Update(cart);
+            
         }
 
         public async Task CloseCurrentCart()

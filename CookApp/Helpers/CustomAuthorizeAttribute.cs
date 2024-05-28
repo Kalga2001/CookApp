@@ -46,8 +46,7 @@ public class CustomAuthorizeAttribute : Attribute, IAuthorizationFilter
 
             if (roles.Contains("Administrator"))
             {
-                // Redirect to Admin page
-                filterContext.Result = new RedirectResult("~/Admin/Index");
+                
                 return;
             }
         }

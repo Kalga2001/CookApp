@@ -4,6 +4,7 @@ using System.Runtime.CompilerServices;
 
 namespace CookApp.API.Controllers
 {
+    [CustomAuthorize("Administrator", "Client")]
     public class PaymentController : Controller
     {
         private readonly IOrderService _orderService;

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CookApp.API.Controllers
 {
+    [CustomAuthorize("Administrator", "Client")]
     public class CartItemController : Controller
     {
         private readonly ICartItemService _cartItemService;
@@ -31,6 +32,7 @@ namespace CookApp.API.Controllers
         public async Task<IActionResult> AddToCart([FromBody]CartItem model)
         {
             int cartId = await _cartService.GetAvailableCart();
+            Order currentOrder = await _orderService.CurrentOrder();
 
             if(cartId < 1)
                  cartId = await _cartService.CreateCartAsync();
@@ -45,17 +47,9 @@ namespace CookApp.API.Controllers
                 AddedAt = DateTime.UtcNow
             };
 
-            var orderDto = new OrderDto()
-            {
-                TotalAmount = cartItem.TotalPrice,
-                OrderDate = DateTime.Now,
-                CartId = cartId,
-                PaymentStatus = Entity.Enums.PaymentStatus.NoPayment,
-                OrderStatus = Entity.Enums.OrderStatus.InProgress
-            };
-            await _cartService.AddCartItemToCartAsync(cartId, cartItem);
-            await _orderService.AddOrder(orderDto);
              
+            await _cartService.AddCartItemToCartAsync(cartId, cartItem);
+    
             return Ok(cartItem);
 
         }

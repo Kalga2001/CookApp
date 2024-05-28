@@ -110,6 +110,13 @@ namespace CookApp.API.Controllers
 
             return RedirectToAction("Login");
         }
+
+        [HttpPost]
+        public IActionResult Logout()
+        {
+            Response.Cookies.Delete("accessToken");
+            return Ok(); // или что-то другое в зависимости от вашей логики
+        }
     }
 }
 
