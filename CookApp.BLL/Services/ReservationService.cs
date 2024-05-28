@@ -82,8 +82,8 @@ namespace CookApp.BLL.Services
 
         public List<string> GetTime()
         {
-            var startTime = new TimeSpan(7, 0, 0); 
-            var endTime = new TimeSpan(23, 0, 0);  
+            var startTime = new TimeSpan(7, 0, 0);
+            var endTime = new TimeSpan(23, 0, 0);
             var timeSlots = new List<string>();
 
             for (var time = startTime; time < endTime; time = time.Add(TimeSpan.FromHours(1)))
@@ -92,6 +92,46 @@ namespace CookApp.BLL.Services
             }
 
             return timeSlots;
+        }
+
+        public IQueryable<ReservationDto> GetReservations()
+        {
+            var reservations = _reservationRepository.GetAllAsyncQuery();
+
+            var reservationDtos = reservations.Select(r => new ReservationDto
+            {
+                ReservationId = r.Id,
+                Name = r.Name,
+                TableId = r.TableId,
+                UserId = r.UserId,
+                ReservationDate = r.ReservationDate,
+                Time = r.BeginTime,
+                NumberOfPeople = r.NumberOfPeople,
+                Message = r.Message
+            });
+
+            return reservationDtos;
+        }
+
+        public async Task UpdateReservation(ReservationDto reservationDto)
+        {
+            var existingReservation = await _reservationRepository.GetByIdAsync(reservationDto.ReservationId);
+            existingReservation.TableId = reservationDto.TableId;
+            existingReservation.UserId = reservationDto.UserId;
+            existingReservation.ReservationDate = reservationDto.ReservationDate;
+            existingReservation.BeginTime = reservationDto.Time;
+            existingReservation.EndTime = reservationDto.Time.Add(TimeSpan.FromHours(2));
+            existingReservation.NumberOfPeople = reservationDto.NumberOfPeople;
+            existingReservation.Message = reservationDto.Message;
+            existingReservation.Name = reservationDto.Name;
+
+            await _reservationRepository.Update(existingReservation);
+        }
+
+        public async Task DeleteReservation(int reservationId)
+        {
+            var reservation = await _reservationRepository.GetByIdAsync(reservationId);
+            await _reservationRepository.DeleteAsync(reservation);
         }
     }
 

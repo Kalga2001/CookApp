@@ -8,6 +8,7 @@ namespace CookApp.BLL.Dtos.ReservationDtos
 {
     public class ReservationDto
     {
+        public int ReservationId { get; set; }
         public string Name { get; set; }
         public int TableId { get; set; }
         public int UserId { get; set; } 

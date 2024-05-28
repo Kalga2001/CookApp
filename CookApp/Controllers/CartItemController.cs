@@ -53,10 +53,9 @@ namespace CookApp.API.Controllers
                 PaymentStatus = Entity.Enums.PaymentStatus.NoPayment,
                 OrderStatus = Entity.Enums.OrderStatus.InProgress
             };
-
-            await _orderService.AddOrder(orderDto);
             await _cartService.AddCartItemToCartAsync(cartId, cartItem);
-
+            await _orderService.AddOrder(orderDto);
+             
             return Ok(cartItem);
 
         }

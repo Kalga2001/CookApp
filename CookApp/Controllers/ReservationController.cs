@@ -1,6 +1,7 @@
 ﻿using CookApp.BLL.Dtos.ReservationDtos;
 using CookApp.BLL.IServices;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Linq;
 
 namespace CookApp.API.Controllers
@@ -18,10 +19,8 @@ namespace CookApp.API.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            // Получаем текущую дату
             DateTime currentDate = DateTime.Today;
 
-            // Получаем доступные столы и время для текущей даты
             var availableTables = await _reservationService.GetTables();
             var availableTime = _reservationService.GetTime();
 
@@ -81,6 +80,49 @@ namespace CookApp.API.Controllers
 
             ViewBag.AvailableTables = availableTables;
             return Ok(availableTables);
+        }
+
+        public async Task<IActionResult> Reservations()
+        {
+            var reservations = await _reservationService.GetReservations().ToListAsync();
+            var availableTables = await _reservationService.GetTables();
+            var availableTime = _reservationService.GetTime();
+
+            ViewBag.AvailableTables = availableTables;
+            ViewBag.AvailableTime = availableTime;
+
+
+            return View(reservations);
+        }
+
+        [HttpPost]
+        public async Task UpdateReservation()
+        {
+            using (StreamReader reader = new StreamReader(Request.Body))
+            {
+                var requestBody = await reader.ReadToEndAsync();
+                JObject reservationObject = JObject.Parse(requestBody);
+
+                ReservationDto reservationDto = new ReservationDto
+                {
+                    ReservationId = reservationObject["ReservationId"].ToObject<int>(),
+                    Name = reservationObject["Name"].ToString(),
+                    NumberOfPeople = (int)reservationObject["NumberOfPeople"],
+                    ReservationDate = reservationObject["ReservationDate"].ToObject<DateTime>(),
+                    Time = reservationObject["Time"].ToObject<TimeSpan>(),
+                    Message = reservationObject["Message"].ToString(),
+                    TableId = (int)reservationObject["TableId"],
+                    UserId = (int)reservationObject["UserId"]
+                };
+
+              await _reservationService.UpdateReservation(reservationDto);
+            }
+        }
+
+        [HttpPost]
+        public async Task DeleteReservation(int reservationId)
+        {
+           await _reservationService.DeleteReservation(reservationId);
         }
     }
 

@@ -9,6 +9,7 @@ namespace CookApp.Entity.Entity
     public class Reservation : BaseEntity
     {
         public int UserId { get; set; }
+        public string Name { get; set; }
         public User User { get; set; }
         public int TableId { get; set; }
         public Table Table { get; set; }

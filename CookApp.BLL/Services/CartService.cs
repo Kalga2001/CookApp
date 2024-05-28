@@ -26,7 +26,9 @@ namespace CookApp.BLL.Services
         {
             var inProgressCart = await _cartRepository.GetAllAsyncQuery().FirstOrDefaultAsync(x => x.CartState == Entity.Enums.CartState.InProgress);
 
-            return inProgressCart?.Id ?? 0;
+            int cartId = inProgressCart.Id;
+
+            return cartId;
         }
 
         public async Task<IQueryable<CartDto>> GetCart()

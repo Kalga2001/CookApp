@@ -21,7 +21,7 @@ public class CustomAuthorizeAttribute : Attribute, IAuthorizationFilter
 
         if (string.IsNullOrEmpty(token))
         {
-            filterContext.Result = new UnauthorizedResult();
+            filterContext.Result = new RedirectResult("~/Account/Login");
             return;
         }
 
